@@ -1,21 +1,33 @@
-
 package com.QuanLyChungCu_v2.QuanLyChungCu.services;
 
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Room;
+import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.RoomRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Map;
 
-public interface RoomService {
+@Service
+@Transactional
+public class RoomService{
+    @Autowired
+    private RoomRepository repo;
 
-    List<Room> getRooms(Map<String, String> params);
+    public List<Room> getAll(){
+        return repo.findAll();
+    }
+    public void addOrUpdate(Room entity){}
 
-    void addOrUpdate(Room r);
+    public void Save(Room entity){
+            repo.save(entity);
+    }
 
-    Room getRoomById(int id);
+    public Room getRoomById(Integer id){
+        return repo.findById(id).get();
+    }
 
-    void deleteRoom(int id) throws Exception;
-
-    int getTotalRooms();
-
-    boolean isRoomNameExists(String roomName);
+    public void Delete(Integer id){
+        repo.deleteById(id);
+    }
 }

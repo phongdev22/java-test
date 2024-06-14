@@ -1,16 +1,24 @@
-
 package com.QuanLyChungCu_v2.QuanLyChungCu.services;
 
-import com.QuanLyChungCu_v2.QuanLyChungCu.models.Survey;
-import java.util.List;
-import java.util.Map;
+import com.QuanLyChungCu_v2.QuanLyChungCu.dto.SurveyDTO;
+import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.SurveyQuestionRepository;
+import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.SurveyRepository;
+import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.SurveyResponseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public interface SurveyService {
-    List<Survey> getSurveys(Map<String, String> params);
+@Service
+public class SurveyService {
 
-    int addOrUpdate(Survey survey);
+    @Autowired
+    private SurveyRepository surveyRepo;
+    @Autowired
+    private SurveyQuestionRepository surveyQuestionRepo;
+    @Autowired
+    private SurveyResponseRepository surveyResponseRepo;
 
-    Survey getSurveyById(int id);
 
-    int getTotalSurveys();
+    public void CreateSurvey(SurveyDTO surveyDTO){
+
+    }
 }

@@ -1,19 +1,25 @@
-
 package com.QuanLyChungCu_v2.QuanLyChungCu.services;
 
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Invoice;
+import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.InvoiceRepository;
+import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.PaymentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public interface InvoiceService {
+@Service
+@Transactional
+public class InvoiceService {
+    @Autowired
+    private InvoiceRepository invoiceRepo;
+    @Autowired
+    private PaymentRepository paymentRepo;
 
-    List<Invoice> getInvoices(Map<String, String> params);
+    public List<Invoice> GetAllInvoiceByUserId(){
+        return new ArrayList<Invoice>();
+    }
 
-    void addOrUpdate(Invoice invoice);
-
-    Invoice getInvoiceById(int id);
-
-    void deleteInvoice(int id) throws Exception;
-
-    int getTotalInvoices();
 }

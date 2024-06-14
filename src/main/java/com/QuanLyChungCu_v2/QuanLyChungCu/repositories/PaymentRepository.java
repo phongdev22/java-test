@@ -1,14 +1,9 @@
-
 package com.QuanLyChungCu_v2.QuanLyChungCu.repositories;
 
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Payment;
-import java.util.List;
-import java.util.Map;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface PaymentRepository {
-
-    void addPayment(Payment payment);
-
-    List<Payment> getPayments(Map<String, String> params) throws Exception;
-
+@Repository
+public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 }

@@ -1,16 +1,9 @@
-
 package com.QuanLyChungCu_v2.QuanLyChungCu.repositories;
 
-import com.QuanLyChungCu_v2.QuanLyChungCu.models.Surveyquestion;
-import java.util.List;
-import java.util.Map;
+import com.QuanLyChungCu_v2.QuanLyChungCu.models.SurveyQuestion;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface SurveyQuestionRepository {
-    List<Surveyquestion> getSurveyQuestions(Map<String, String> params);
-
-    int addOrUpdate(Surveyquestion surveyQuestion);
-
-    Surveyquestion getSurveyQuestionById(int id);
-
-    void deleteSurveyQuestion(int id);
+@Repository
+public interface SurveyQuestionRepository extends JpaRepository<SurveyQuestion, Integer> {
 }

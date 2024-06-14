@@ -1,21 +1,10 @@
-
 package com.QuanLyChungCu_v2.QuanLyChungCu.repositories;
 
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Room;
-import java.util.List;
-import java.util.Map;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface RoomRepository {
+@Repository
+public interface RoomRepository extends JpaRepository<Room, Integer> {
 
-    List<Room> getRooms(Map<String, String> params);
-
-    void addOrUpdate(Room r);
-
-    Room getRoomById(int id);
-
-    void deleteRoom(int id) throws Exception;
-
-    int getTotalRooms();
-
-    boolean isRoomNameExists(String roomName);
 }

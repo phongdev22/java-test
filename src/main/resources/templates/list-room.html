@@ -1,0 +1,21 @@
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterate through list of rooms -->
+    <tr th:each="room : ${rooms}">
+        <td th:text="${room.code}"></td>
+        <td th:text="${room.name}"></td>
+        <td th:text="${room.description}"></td>
+        <td th:text="${room.price}"></td>
+        <td class="room-cell" th:attr="onclick='showRoomDetail(\'' + ${room.id} + '\')'">Show Detail</td>
+    </tr>
+    </tbody>
+</table>
