@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +19,22 @@ import java.io.IOException;
 public class AccountController {
     @Autowired
     private UserEntityService userEntityService;
+
+    @PostMapping("/authenticate")
+    public String authenticate(@RequestParam("username") String username,
+                               @RequestParam("password") String password,
+                               HttpSession session) {
+
+//        boolean isAuthenticated = true ; // userEntityService.authenticate(username, password);
+//        if (isAuthenticated) {
+//            session.setAttribute("username", username);
+//            return "redirect:/dashboard";
+//        } else {
+//            return "redirect:/login?error";
+//        }
+
+        return "redirect:/home";
+    }
 
     @PostMapping("/api/create")
     public ResponseEntity<String> createUser(@RequestBody UserEntity entity) {
@@ -71,18 +88,14 @@ public class AccountController {
         }
     }
 
-    @PostMapping("/authenticate")
-    public String authenticate(@RequestParam("username") String username,
-                               @RequestParam("password") String password,
-                               HttpSession session) {
+    @GetMapping("/list")
+    public String getAll(@RequestParam(defaultValue = "1") int currentPage,
+                         @RequestParam(defaultValue = "10") int pageSize,
+                         Model model){
 
-        boolean isAuthenticated = true ; // userEntityService.authenticate(username, password);
-        if (isAuthenticated) {
-            session.setAttribute("username", username);
-            return "redirect:/dashboard";
-        } else {
-            return "redirect:/login?error";
-        }
+
+
+
+        return "list-account";
     }
-
 }

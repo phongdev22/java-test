@@ -5,6 +5,8 @@ import com.QuanLyChungCu_v2.QuanLyChungCu.models.UserEntity;
 import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.MediaRepository;
 import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,6 +21,10 @@ public class UserEntityService {
 
     @Autowired
     private MediaRepository mediaRepo;
+
+    public Page<UserEntity> getAll(Pageable pageable){
+        return userRepo.findAll(pageable);
+    }
 
     public void Save(UserEntity entity){
         userRepo.save(entity);

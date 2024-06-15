@@ -1,0 +1,21 @@
+<table class="table table-hover mt-4">
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Description</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="s : ${surveys}">
+        <td th:text="${s.id}"></td>
+        <td th:text="${s.title}"></td>
+        <td th:text="${s.status}"></td>
+        <td>
+            <p th:class="${s.status == 'Open'} ? 'text-success' : 'text-danger'" th:text="${s.status}"></p>
+        </td>
+        <td th:text="${s.description}"></td>
+        <td>
+            <a th:href="@{/surveys/{id}(id=${s.id})}" class="btn btn-info">View</a>
+        </td>
+    </tr>
+</table>

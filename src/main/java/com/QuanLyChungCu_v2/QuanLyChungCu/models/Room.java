@@ -24,7 +24,7 @@ public class Room {
     private Integer rating;
     private Integer capacity;
     private String roomType;
-    private String status;
+    private Boolean status;
 
     private Date CreatedDate;
 }

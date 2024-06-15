@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/payments")
 public class PaymentController {
-    @Autowired
-    @GetMapping("/vnpay")
-    public String Callback(){
-        return "";
-    }
-
+//    @Autowired
+//    @GetMapping("/vnpay")
+//    public String Callback(){
+//        return "";
+//    }
 }

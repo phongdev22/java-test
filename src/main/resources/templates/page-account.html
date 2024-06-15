@@ -1,10 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<table class="table table-hover mt-4">
+    <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Locker</th>
+        <th>Status</th>
+        <th>Avatar</th>
+        <th>Room</th>
+        <th>Locker</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="u : ${users}">
+        <td th:text="${u.id}"></td>
+        <td th:text="${u.username}"></td>
+        <td th:text="${u.firstname}"></td>
+        <td th:text="${u.lastname}"></td>
+        <td th:text="${u.email}"></td>
+        <td th:text="${u.phone}"></td>
+        <td th:text="${u.locker.id}"></td>
+        <td>
+            <p th:class="${u.status == 'Active'} ? 'text-success' : 'text-danger'" th:text="${u.status}"></p>
+        </td>
+        <td>
+            <img class="rounded img-fluid" th:src="${u.avatar}" th:width="200" th:unless="${u.avatar == null}">
+        </td>
+        <td th:text="${u.room.name}"></td>
+        <td th:text="${u.locker.id}"></td>
+        <td>
+            <button th:if="${u.status == 'Active'}" th:onclick="blockUser(\'@{/api/users/ + u.id}\')" class="btn btn-danger">Block</button>
+            <a th:href="@{/users/{id}(id=${u.id})}" class="btn btn-info">Update</a>
+        </td>
+    </tr>
+</table>

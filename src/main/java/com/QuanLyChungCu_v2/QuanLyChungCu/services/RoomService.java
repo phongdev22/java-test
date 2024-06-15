@@ -1,8 +1,11 @@
 package com.QuanLyChungCu_v2.QuanLyChungCu.services;
 
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Room;
+import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.MediaRepository;
 import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,8 +17,11 @@ public class RoomService{
     @Autowired
     private RoomRepository repo;
 
-    public List<Room> getAll(){
-        return repo.findAll();
+    @Autowired
+    private MediaRepository mediaRepo;
+
+    public Page<Room> getAll(Pageable pageable){
+        return repo.findAll(pageable);
     }
     public void addOrUpdate(Room entity){}
 
@@ -27,7 +33,11 @@ public class RoomService{
         return repo.findById(id).get();
     }
 
-    public void Delete(Integer id){
+    public void uploadMedia(){
+
+    }
+
+    public void delete(Integer id){
         repo.deleteById(id);
     }
 }
