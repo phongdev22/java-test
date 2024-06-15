@@ -1,8 +1,8 @@
 package com.QuanLyChungCu_v2.QuanLyChungCu.controllers;
 
-import com.QuanLyChungCu_v2.QuanLyChungCu.models.Invoice;
+import com.QuanLyChungCu_v2.QuanLyChungCu.models.Survey;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.InvoiceService;
-import com.QuanLyChungCu_v2.QuanLyChungCu.services.RoomService;
+import com.QuanLyChungCu_v2.QuanLyChungCu.services.SurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,17 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/invoices")
-public class InvoiceController {
+@RequestMapping("/surveys")
+public class SurveyController {
 
     @Autowired
-    private InvoiceService invoiceService;
+    private SurveyService surveyService;
 
     @GetMapping()
-    public String listInvoice(Model model){
-//        List<Invoice> list = invoiceService.getAll();
-//        System.out.println("List invoice"+ list.size());
-//        model.addAttribute("invoices", list );
-        return "list-invoice";
+    public String getALlSurvey(Model model) {
+//        List<Survey> list = surveyService.getAll();
+//        model.addAttribute("surveys", list);
+        return "list-survey";
     }
 }

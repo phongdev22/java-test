@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main-layout.html}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>User Management</title>
+</head>
+<body>
+<article layout:fragment="content">
+    <h1 class="text-center text-info mt-4">User management</h1>
+    <div class="d-flex justify-content-between mb-3 align-items-end">
+        <div class="d-flex align-items-center">
+            <a th:href="@{/users/}" class="btn btn-success" style="height: 40px">Add User</a>
+        </div>
+
+        <form th:action="@{/users}" class="d-flex align-items-end">
+            <div class="me-4">
+                <input style="width: 140px" class="form-control me-2" name="username" type="search" placeholder="Username...">
+            </div>
+            <div class="me-4">
+                <input style="width: 140px" class="form-control me-2" name="email" type="search" placeholder="Email...">
+            </div>
+            <div class="me-4">
+                <input style="width: 140px" class="form-control me-2" name="phone" type="search" placeholder="Phone...">
+            </div>
+            <div class="me-4">
+                <label class="d-flex justify-content-center mb-2" for="status">Status</label>
+                <select style="width: 160px" class="form-select" id="status" name="status" path="status">
+                    <option value="Active" selected>Active</option>
+                    <option value="Block">Block</option>
+                </select>
+            </div>
+
+            <div class="me-4">
+                <label class="d-flex justify-content-center mb-2" for="room">Room</label>
+                <select style="width: 140px" class="form-select" id="room" name="room">
+                    <option th:each="r : ${roomsUsing}" th:value="${r.id}" th:text="${r.name}"></option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+    </div>
+    <table class="table table-hover mt-4">
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Locker</th>
+            <th>Status</th>
+            <th>Avatar</th>
+            <th>Room</th>
+            <th>Locker</th>
+            <th>Action</th>
+        </tr>
+        <tr th:each="u : ${users}">
+            <td th:text="${u.id}"></td>
+            <td th:text="${u.username}"></td>
+            <td th:text="${u.firstname}"></td>
+            <td th:text="${u.lastname}"></td>
+            <td th:text="${u.email}"></td>
+            <td th:text="${u.phone}"></td>
+            <td th:text="${u.locker.id}"></td>
+            <td>
+                <p th:class="${u.status == 'Active'} ? 'text-success' : 'text-danger'" th:text="${u.status}"></p>
+            </td>
+            <td>
+                <img class="rounded img-fluid" th:src="${u.avatar}" th:alt="${u.avatar}" th:width="200" th:unless="${u.avatar == null}">
+                -----
+            </td>
+            <td th:text="${u.room.name}"></td>
+            <td th:text="${u.locker.id}"></td>
+            <td>
+                <button th:if="${u.status == 'Active'}" th:onclick="'blockUser(\'' + @{/api/users/ + u.id} + '\')'" class="btn btn-danger">Block</button>
+                <a th:href="@{/users/{id}(id=${u.id})}" class="btn btn-info">Update</a>
+            </td>
+        </tr>
+    </table>
+
+<!--    <div class="d-flex justify-content-end">-->
+<!--        <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">-->
+<!--            <div class="btn-group me-2" role="group" aria-label="First group">-->
+<!--                <button th:each="page : ${#numbers.sequence(1, totalPages)}" th:type="button" th:class="${page == currentPage} ? 'btn btn-outline-secondary active' : 'btn btn-outline-secondary'" th:text="${page}" th:onclick="'window.location.href = \'/QuanLyChungCu/users?page=' + ${page} + '\''"></button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+</article>
+</body>
+</html>

@@ -18,8 +18,11 @@ public class InvoiceService {
     @Autowired
     private PaymentRepository paymentRepo;
 
-    public List<Invoice> GetAllInvoiceByUserId(){
-        return new ArrayList<Invoice>();
+    public List<Invoice> getAll(){
+        return invoiceRepo.findAll();
     }
+//    public List<Invoice> GetAllInvoiceByUserId(){
+//        return new ArrayList<Invoice>();
+//    }
 
 }

@@ -19,6 +19,12 @@ public class AccountController {
     @Autowired
     private UserEntityService userEntityService;
 
+    @GetMapping()
+    public String getAllUser(){
+
+        return "list-user";
+    }
+
     @PostMapping("/api/create")
     public ResponseEntity<String> createUser(@RequestBody UserEntity entity) {
         try {

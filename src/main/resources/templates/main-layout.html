@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!doctype html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/html"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+    <!-- jQuery -->
+    <script crossorigin="anonymous"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            th:src="|https://code.jquery.com/jquery-3.7.1.min.js|"></script>
+    <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js}"></script>
+
+    <!-- Font Awesome -->
+    <link crossorigin="anonymous"
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          referrerpolicy="no-referrer"
+          rel="stylesheet"
+          th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css}"/>
+
+    <!-- Bootstrap 4 -->
+    <link crossorigin="anonymous"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          rel="stylesheet"
+          th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css}"/>
+
+    <!-- Select2 -->
+    <link rel="stylesheet"
+          th:href="@{https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css}"/>
+    <link rel="stylesheet"
+          th:href="@{https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css}"/>
+
+    <!-- Moment.js -->
+    <script crossorigin="anonymous"
+            integrity="sha512-hUhvpC5f8cgc04OZb55j0KNGh4eh7dLxd/dPSJ5VyzqDWxsayYbojWyl5Tkcgrmb/RVKCRJI1jNlRbVP4WWC4w=="
+            referrerpolicy="no-referrer"
+            th:src="@{https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js}"></script>
+
+    <!-- Custom inline style -->
+    <style>
+        .select2-container {
+            width: 255px !important;
+            margin-left: 15px;
+        }
+
+        .select2-container--bootstrap4 .select2-dropdown.select2-dropdown--below {
+            margin-left: -15px;
+        }
+    </style>
+</head>
+<body class="nav-md">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">DV Apartment</a>
+        <button class="navbar-toggler" data-bs-target="#collapsibleNavbar" data-bs-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <div class="navbar-nav me-auto justify-content-between w-100">
+                <div class="d-flex">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Rooms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/users}">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/lockers}">Lockers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/orders}">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/entries}">Entry Right</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/parkings}">Parking Right</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/invoices}">Invoices</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/surveys}">Surveys</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/feedbacks}">Feedbacks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/stats}">Stats</a>
+                    </li>
+                </div>
+                <div class="d-flex align-items-center" th:if="${#httpServletRequest.userPrincipal != null}">
+                    <li style="color: #fff; margin-right: 10px">
+                        Welcome! <span th:text="${#httpServletRequest.userPrincipal.name}"></span>
+                    </li>
+                    <li>
+                        <button class="btn btn-primary" type="button">
+                            <a style="text-decoration: none; color: #fff" th:href="@{/logout}">Logout</a>
+                        </button>
+                    </li>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="h-100 d-flex flex-column justify-content-between" style="height: calc(100vh - 40px) !important;">
+    <section class="container">
+        <article layout:fragment="content">
+
+        </article>
+    </section>
+    <div class="alert alert-success mt-2">
+        <strong>DV Apartment!</strong> &copy; 2024.
+    </div>
+</div>
+</div>
+<!-- Bootstrap JS from CDN -->
+<script crossorigin="anonymous"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js}"></script>
+<!-- Select2 JS -->
+<script th:src="@{https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js}"></script>
+</body>
+</html>

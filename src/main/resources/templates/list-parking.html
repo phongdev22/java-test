@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main-layout.html}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Parking</title>
+</head>
+<body>
+<article layout:fragment="content">
+    <h1 class="text-center text-info mt-4">Parking Right Management</h1>
+<!--    <div th:if="${not #strings.isEmpty(errMsg)}" class="alert alert-danger" th:text="${errMsg}"></div>-->
+    <div class="d-flex justify-content-between mb-3 align-items-end">
+        <form action="/entries" method="get" class="d-flex mt-4 w-100 justify-content-end align-items-end">
+            <div class="me-4">
+                <label class="d-flex justify-content-center mb-2" for="status">Status</label>
+                <select style="width: 140px;" class="form-select ms-3 me-4" id="status" name="status">
+                    <option value="Pending">Pending</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Canceled">Canceled</option>
+                </select>
+            </div>
+            <div class="me-4">
+                <label class="d-flex justify-content-center mb-2" for="roomId">Room</label>
+                <select style="width: 140px;" class="form-select ms-3 me-4" id="roomId" name="roomId">
+                    <option th:each="r : ${roomsUsing}" th:value="${r.id}" th:text="${r.name}"></option>
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+    </div>
+    <table class="table table-hover mt-4">
+        <tr>
+            <th>Id</th>
+            <th>Status</th>
+            <th>Related Name</th>
+            <th>Room</th>
+            <th>Type of vehicle</th>
+            <th>License plates</th>
+            <th>Created at</th>
+            <th>Updated at</th>
+            <th>Action</th>
+        </tr>
+        <tr th:each="p : ${parkings}">
+            <td th:text="${p.id}"></td>
+            <td>
+            <span th:switch="${p.status}">
+                <span th:case="'Confirmed'" class="text-success" th:text="${p.status}"></span>
+                <span th:case="'Pending'" class="text-warning" th:text="${p.status}"></span>
+                <span th:case="*" class="text-danger" th:text="${p.status}"></span>
+            </span>
+            </td>
+            <td th:text="${p.relativeId.name}"></td>
+            <td th:text="${p.relativeId.userId.room.name}"></td>
+            <td th:text="${p.typeOfVehicle}"></td>
+            <td th:text="${p.licensePlates}"></td>
+            <td><span th:text="${#dates.format(p.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></span></td>
+            <td>
+                <span th:if="${p.updatedAt != null}" th:text="${#dates.format(p.updatedAt, 'dd/MM/yyyy HH:mm:ss')}"></span>
+                <span th:unless="${p.updatedAt != null}">-----</span>
+            </td>
+            <td>
+                <a th:href="@{/api/parkings/{id}(id=${p.id})}" class="btn btn-info" onclick="updateParkingRight(this.href, 'Confirmed'); return false;">Confirm</a>
+                <a th:href="@{/api/parkings/{id}(id=${p.id})}" class="btn btn-danger" onclick="updateParkingRight(this.href, 'Canceled'); return false;">Cancel</a>
+            </td>
+        </tr>
+    </table>
+
+<!--    <div class="d-flex justify-content-end">-->
+<!--        <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">-->
+<!--            <div class="btn-group me-2" role="group" aria-label="First group">-->
+<!--                <div th:if="${totalPages > 3}">-->
+<!--                    <div th:if="${currentPage > 2}">-->
+<!--                        <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/QuanLyChungCu/parkings?page=1'">1</button>-->
+<!--                        <button type="button" class="btn btn-outline-secondary">...</button>-->
+<!--                    </div>-->
+<!--                    <div th:unless="${currentPage > 2}">-->
+<!--                        <button th:each="i : ${#numbers.sequence(1, 3)}" type="button" class="btn btn-outline-secondary" th:text="${i}" onclick="window.location.href='/QuanLyChungCu/parkings?page=' + ${i}"></button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <divHere's the modified code:-->
+
+<!--                ```html-->
+<!--                <div th:unless="${totalPages > 3}">-->
+<!--                    <button th:each="i : ${#numbers.sequence(1, totalPages)}" type="button" class="btn btn-outline-secondary" th:text="${i}" onclick="window.location.href='/QuanLyChungCu/parkings?page=' + ${i}"></button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+</article>
+</body>
+</html>

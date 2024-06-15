@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main-layout.html}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Invoice</title>
+</head>
+<body>
+<article layout:fragment="content">
+    <h1 class="text-center text-info mt-4 mb-4">Invoice management</h1>
+    <div class="d-flex justify-content-between mb-4 align-items-end">
+        <a style="height: 40px" th:href="@{/QuanLyChungCu/invoices/}" class="btn btn-success">Add Invoice</a>
+        <form action="@{/invoices}" class="d-flex align-items-end">
+            <div class="me-4">
+                <label class="d-flex justify-content-center mb-2" for="status">Status</label>
+<!--                <select class="form-select" id="status" name="status" th:field="${status}">-->
+                <select class="form-select" id="status" name="status">
+                    <option value="Unpaid" selected>Unpaid</option>
+                    <option value="Paid">Paid</option>
+                </select>
+            </div>
+            <div>
+                <label class="d-flex justify-content-center mb-2" for="invoiceType">Invoice type</label>
+                <select style="width: 140px" class="form-select" id="invoiceType" name="invoiceType">
+                    <option th:each="it : ${invoicetypes}" th:value="${it.type}" th:text="${it.type}"></option>
+                </select>
+            </div>
+            <div class="ms-4">
+                <label class="d-flex justify-content-center mb-2" for="room">Room</label>
+                <select style="width: 140px" class="form-select" id="room" name="room">
+                    <option th:each="r : ${roomsUsing}" th:value="${r.id}" th:text="${r.name}"></option>
+                </select>
+            </div>
+            <button style="height: 40px" class="btn btn-primary ms-5" type="submit">Search</button>
+        </form>
+    </div>
+    <table class="table table-hover mt-4">
+        <tr>
+            <th>Id</th>
+            <th>Invoice type</th>
+            <th>Amount</th>
+            <th>Due date</th>
+            <th>Status</th>
+            <th>Created at</th>
+            <th>Updated at</th>
+            <th>Room</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="i : ${invoices}">
+            <td th:text="${i.id}"></td>
+<!--            <td th:text="${i.invoiceType.type}"></td>-->
+            <td th:text="${i.amount} + ' $'"></td>
+            <td>
+                <span th:text="${#dates.format(i.dueDate, 'dd/MM/yyyy HH:mm:ss')}"></span>
+            </td>
+            <td>
+                <p th:class="${i.status == 'Unpaid'} ? 'text-warning' : 'text-success'" th:text="${i.status}"></p>
+            </td>
+            <td>
+                <span th:text="${#dates.format(i.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></span>
+            </td>
+            <td>
+                <span th:text="${#dates.format(i.updatedAt, 'dd/MM/yyyy HH:mm:ss')}"></span>
+            </td>
+            <td th:text="${i.room.name}"></td>
+            <td th:text="${i.description}"></td>
+            <td>
+                <a th:href="@{/invoices/{id}(id=${i.id})}" class="btn btn-info">Update</a>
+            </td>
+        </tr>
+    </table>
+
+</article>
+</body>
+</html>

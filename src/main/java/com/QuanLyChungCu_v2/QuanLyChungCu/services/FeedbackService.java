@@ -19,7 +19,7 @@ public class FeedbackService {
         repo.save(feedback);
     }
 
-    public List<Feedback> getAllFeedbacks() {
+    public List<Feedback> getAll() {
         return repo.findAll();
     }
 

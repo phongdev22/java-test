@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main-layout.html}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Page Room</title>
+    <meta charset="UTF-8">
+</head>
+<div layout:fragment="content">
+    <h1 class="text-center text-info mt-4">Rooms</h1>
+    <form action="/rooms/" enctype="multipart/form-data" method="post" th:object="${room}">
+        <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+            <div class="alert alert-danger" th:each="error : ${#fields.errors('*')}">
+                <span th:text="${error}"></span>
+            </div>
+        </div>
+
+        <div class="form-floating mb-3 mt-3">
+<!--            <input class="form-control" id="name" placeholder="Room name" th:field="*{name}"/>-->
+<!--            <label for="name">Room name</label>-->
+        </div>
+        <div class="form-floating mb-3 mt-3" th:if="${room.id > 0}">
+            <input class="form-control" id="status" placeholder="Status" th:field="*{status}"/>
+            <label for="status">Status</label>
+        </div>
+
+        <div class="form-floating">
+            <select class="form-select" id="roomtype" name="roomtype" th:field="*{roomtype.id}">
+                <option th:each="rt : ${roomtypes}" th:selected="${rt.id == room.roomtype.id}" th:value="${rt.id}">
+                    <span th:text="${rt.type}"></span>
+                </option>
+            </select>
+            <label class="form-label" for="roomtype">Select list (select one):</label>
+        </div>
+
+        <div class="form-floating mb-3 mt-3">
+            <div>
+                <label class="mb-1" for="file">Image</label>
+            </div>
+            <div class="mb-2">
+                <input id="file" name="file" type="file"/>
+                <img th:if="${room.image != null}" th:src="${room.image}" width="200"/>
+            </div>
+        </div>
+        <div class="form-floating">
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-info mt-2 w-200" type="submit">
+                    <span th:text="${room.id > 0 ? 'Update' : 'Create room'}"></span>
+                </button>
+                <input th:field="*{id}" type="hidden"/>
+                <input th:field="*{image}" type="hidden"/>
+            </div>
+        </div>
+    </form>
+</div>
