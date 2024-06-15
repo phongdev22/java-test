@@ -1,10 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th class="text-center">Price</th>
+        <th class="text-center">Capacity</th>
+        <!--        <th class="text-center">Rating</th>-->
+        <th class="text-center">Room Type</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="room, index : ${rooms}">
+        <td th:text="${index.index + 1}"></td>
+        <td th:text="${room.code ?: 'Không có dữ liệu'}" th:onclick="'javascript:openForm(\'edit\', ' + ${room.id} + ');'"></td>
+        <td th:text="${room.name ?: 'Không có dữ liệu'}" th:onclick="'javascript:openForm(\'edit\', ' + ${room.id} + ');'"></td>
+        <td th:text="${room.description ?: 'Không có dữ liệu'}" th:onclick="'javascript:openForm(\'edit\', ' + ${room.id} + ');'"></td>
+        <td class="text-center" th:text="${room.price ?: 'Không có dữ liệu'}" th:onclick="'javascript:openForm(\'edit\', ' + ${room.id} + ');'"></td>
+        <td class="text-center" th:text="${room.capacity ?: 'Không có dữ liệu'}" th:onclick="'javascript:openForm(\'edit\', ' + ${room.id} + ');'"></td>
+        <!--            <td class="text-center" th:text="${room.rating ?: 'Không có dữ liệu'}" th:onclick="'javascript:openForm(\'edit\', ' + ${room.id} + ');'"></td>-->
+        <td class="text-center" th:text="${room.roomType ?: 'Không có dữ liệu'}" th:onclick="'javascript:openForm(\'edit\', ' + ${room.id} + ');'"></td>
+        <td class="text-center" th:text="${room.status ? 'Active': 'Inactive' }" th:onclick="'javascript:openForm(\'edit\', ' + ${room.id} + ');'"></td>
+        <td class="text-center" >
+            <button class="btn btn-sm btn-danger" th:attr="onclick='deleteRoom(\'' + ${room.id} + '\')'">
+                <i class="fa-regular fa-trash-can" style="color: white"></i>
+            </button>
+        </td>
+    </tr>
+    </tbody>
+    <tfoot th:if="${totalPages > 1}">
+    <tr>
+        <td colspan="5"></td>
+        <td colspan="4">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination" style="justify-content: flex-end;">
+                    <li th:classappend="${currentPage > 1} ? 'page-item' : 'page-item disabled'">
+                        <button class="page-link" th:onclick="|loadTable(${currentPage - 1})|">Previous</button>
+                    </li>
 
-</body>
-</html>
+                    <li th:each="i:${#numbers.sequence(1, totalPages)}"
+                        th:classappend="${currentPage == i} ? 'page-item active' : 'page-item'">
+
+                        <button class="page-link"
+                                th:style="${currentPage == i} ? 'border-color: #cfd6df; background-color: #007bff;' : ''"
+                                th:onclick="|loadTable(${i})|"
+                                th:text="${i}">1</button>
+                    </li>
+
+                    <li th:classappend="${currentPage < totalPages} ? 'page-item' : 'page-item disabled'">
+                        <button class="page-link" th:onclick="|loadTable(${currentPage + 1})|">Next</button>
+                    </li>
+                </ul>
+            </nav>
+        </td>
+    </tr>
+    </tfoot>
+</table>

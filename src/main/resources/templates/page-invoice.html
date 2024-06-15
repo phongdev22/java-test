@@ -1,10 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{mainLayout}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Manage Invoice</title>
 </head>
-<body>
 
-</body>
-</html>
+<div layout:fragment="page-header" class="container-fluid row align-items-center">
+    <div class="col-sm-6 col-12 mb-4 mb-sm-0">
+        <a th:href="@{/rooms}" class="h2 mb-0 ls-tight">Manage Invoice</a>
+    </div>
+
+    <div onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
+        <div class="mx-n1">
+        <span class="btn d-inline-flex btn-sm btn-primary mx-1">
+            <span class="pe-2 d-flex align-items-center"><i class="bi bi-plus"></i></span>
+            <span>Create QR</span>
+        </span>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="content">
+    <div id="content-wrapper" class="mt-3">
+        <div id="list-invoices" ></div>
+        <div id="form-modal" class="modal fade" tabindex="-1"></div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="scripts">
+    <script th:inline="javascript">
+        $(document).ready(function (){
+            loadTable()
+        })
+
+        function openForm(mode, id){
+            const url = mode === "add" ? "/invoices/create" : "/rooms/" + id;
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (data) {
+                    const formModal = $("#form-modal");
+                    formModal.html(data);
+                    formModal.modal('show');
+                }
+            });
+        }
+
+        function loadTable(page = 1){
+            $.ajax({
+                url: "/invoices/list",
+                type: "GET",
+                data: {currentPage: page},
+                success: (data) => {
+                    $("#list-invoices").html(data)
+                },
+                error: (err) => {
+                    console.log("[GET] "+ location.href + ":", err)
+                }
+            })
+        }
+
+        function saveInvoice(){
+            const formData = {
+
+            }
+
+            $.ajax({
+                url: "/invoices",
+                type: "POST",
+                data: formData,
+                success: (data)=> {
+                    console.log("function saveRoom():", data)
+                    $.alert(data.message)
+                    loadTable();
+                }
+            })
+        }
+    </script>
+</th:block>

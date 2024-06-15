@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
@@ -26,8 +28,24 @@ public class UserEntityService {
         return userRepo.findAll(pageable);
     }
 
+    public UserEntity findById(Integer id){
+        return userRepo.findById(id).get();
+    }
+
+    public List<UserEntity> findAll(){
+        return userRepo.findAll();
+    };
+
     public void Save(UserEntity entity){
         userRepo.save(entity);
+    }
+
+    public HashMap<String, Object> GetProfile(Integer id){
+        Optional<UserEntity> user = userRepo.findById(id);
+        Media avatar = mediaRepo.findByMapping(id, "", "Avatar").get(0);
+
+        HashMap<String, Object> userMap = new HashMap<>();
+        return userMap;
     }
 
     public void Update(UserEntity entity) {
@@ -44,6 +62,17 @@ public class UserEntityService {
         } else {
             throw new IllegalArgumentException("UserEntity with id " + entity.getId() + " not found.");
         }
+    }
+
+    public void UpdateStatus(Integer id){
+        Optional<UserEntity> user = userRepo.findById(id);
+        user.ifPresent(u -> {
+            if (u.isLock()) {
+                UnLockAccount(u);
+            } else {
+                LockAccount(u);
+            }
+        });
     }
 
     public void LockAccount(UserEntity entity){

@@ -18,16 +18,7 @@ public class UserEntity {
     private String password;
     private String email;
     private String phone;
-    private String avatar;
     private String status;
     private String roleName;
     private boolean isLock;
-
-    // private Set<SurveyResponse> surveyresponseSet;
-    // private Set<Feedback> feedbackSet;
-    // private Set<Payment> paymentSet;
-    // private Locker locker;
-    // private Room room;
-    // private Set<Relative> relativeSet;
-    // private MultipartFile file;
 }

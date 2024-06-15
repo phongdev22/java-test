@@ -5,6 +5,7 @@ import com.QuanLyChungCu_v2.QuanLyChungCu.models.Room;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.MediaService;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.RoomService;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,10 +38,15 @@ public class RoomController {
     @GetMapping("/list")
     public String getAllRoom(@RequestParam(defaultValue = "1") int currentPage,
                              @RequestParam(defaultValue = "7") int pageSize,
+                             @RequestParam(defaultValue = "")String keyword,
                              Model model) {
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
-        System.out.println(currentPage);
-        Page<Room> roomPage = roomService.getAll(pageable);
+        Page<Room> roomPage;
+        if (keyword == null || keyword.isEmpty()) {
+            roomPage = roomService.getAll(pageable);
+        } else {
+            roomPage = roomService.searchByKeyword(keyword, pageable);
+        }
 
         model.addAttribute("rooms", roomPage.getContent());
         model.addAttribute("currentPage", currentPage);

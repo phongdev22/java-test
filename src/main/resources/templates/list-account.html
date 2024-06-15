@@ -1,10 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Account management</title>
-</head>
-<body>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:if="${#lists.isEmpty(users)}">
+            <td class="text-center bg-light" colspan="7">No data</td>
+        </tr>
 
-</body>
-</html>
+        <tr th:each="user, index : ${users}"
+            th:if="${user.roleName != 'ADMIN'}">
+            <td class="align-middle" th:text="${index.index + 1}">
+            <td class="align-middle" th:text="${user.firstname}" th:onclick="'javascript:openForm(\'edit\', ' + ${user.id} + ');'"></td>
+            <td class="align-middle" th:text="${user.lastname}" th:onclick="'javascript:openForm(\'edit\', ' + ${user.id} + ');'"></td>
+            <td class="align-middle" th:text="${user.email}" th:onclick="'javascript:openForm(\'edit\', ' + ${user.id} + ');'"></td>
+            <td class="align-middle" th:text="${user.phone}" th:onclick="'javascript:openForm(\'edit\', ' + ${user.id} + ');'"></td>
+            <td>
+                <button type="submit" class="btn btn-sm btn-neutral"
+                        th:onclick="'updateStatus(' + ${user.id} + ')'">
+                    <i th:class="${user.isLock} ? 'bi bi-lock' : 'bi bi-unlock'"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot th:if="${totalPages > 1}">
+        <tr>
+        <td colspan="5"></td>
+        <td colspan="4">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination" style="justify-content: flex-end;">
+                    <li th:classappend="${currentPage > 1} ? 'page-item' : 'page-item disabled'">
+                        <button class="page-link" th:onclick="|loadTable(${currentPage - 1})|">Previous</button>
+                    </li>
+
+                    <li th:each="i:${#numbers.sequence(1, totalPages)}"
+                        th:classappend="${currentPage == i} ? 'page-item active' : 'page-item'">
+
+                        <button class="page-link"
+                                th:style="${currentPage == i} ? 'border-color: #cfd6df; background-color: #007bff;' : ''"
+                                th:onclick="|loadTable(${i})|"
+                                th:text="${i}">1</button>
+                    </li>
+
+                    <li th:classappend="${currentPage < totalPages} ? 'page-item' : 'page-item disabled'">
+                        <button class="page-link" th:onclick="|loadTable(${currentPage + 1})|">Next</button>
+                    </li>
+                </ul>
+            </nav>
+        </td>
+    </tr>
+    </tfoot>
+</table>

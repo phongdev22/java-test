@@ -23,6 +23,15 @@ public class RoomService{
     public Page<Room> getAll(Pageable pageable){
         return repo.findAll(pageable);
     }
+
+    public Page<Room> searchByKeyword(String keyword, Pageable pageable){
+        if (keyword == null || keyword.isEmpty()) {
+            return repo.findAll(pageable);
+        } else {
+            return repo.findByKeyword(keyword, pageable);
+        }
+    }
+
     public void addOrUpdate(Room entity){}
 
     public void Save(Room entity){
