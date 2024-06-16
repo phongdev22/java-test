@@ -48,7 +48,6 @@ public class PaymentController {
             return new ResponseEntity<>(new Object(), HttpStatus.OK);
         }catch(Exception ex){
             return new ResponseEntity<>(new Object(), HttpStatus.OK);
-
         }
     }
 }

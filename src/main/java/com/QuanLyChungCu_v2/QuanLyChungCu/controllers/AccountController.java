@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -33,20 +34,16 @@ public class AccountController {
         return "page-account";
     }
 
-    @PostMapping("/authenticate")
-    public String authenticate(@RequestParam("username") String username,
-                               @RequestParam("password") String password,
-                               HttpSession session) {
-
-//        boolean isAuthenticated = true ; // userEntityService.authenticate(username, password);
-//        if (isAuthenticated) {
-//            session.setAttribute("username", username);
-//            return "redirect:/dashboard";
-//        } else {
-//            return "redirect:/login?error";
-//        }
-
-        return "redirect:/home";
+    @PostMapping("/login")
+    public String login(@RequestParam("username") String username,
+                        @RequestParam("password") String password,
+                        RedirectAttributes redirectAttributes) {
+        if ("admin".equals(username) && "123456".equals(password)) {
+            return "redirect:/home";
+        } else {
+            // redirectAttributes.addFlashAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng!");
+            return "redirect:/login";
+        }
     }
 
     @GetMapping("/create")
