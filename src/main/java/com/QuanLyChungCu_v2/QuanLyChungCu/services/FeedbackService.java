@@ -38,4 +38,14 @@ public class FeedbackService {
     public void deleteFeedback(Integer id) {
         repo.deleteById(id);
     }
+
+    public boolean deleteFeedbackByIdAndUserId(Integer id, Integer userId) {
+        Optional<Feedback> existingFeedback = repo.findByIdAndUserId(id, userId);
+        if (existingFeedback.isPresent()) {
+            repo.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
