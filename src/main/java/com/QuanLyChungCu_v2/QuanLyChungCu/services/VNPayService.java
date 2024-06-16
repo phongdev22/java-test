@@ -19,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
 class VNPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_ReturnUrl = "/payments/vnpay";
@@ -126,7 +125,6 @@ public class VNPayService {
 
     @Autowired
     private InvoiceRepository invoiceRepo;
-
 
     public void CreateInvoice(){
 

@@ -1,5 +1,7 @@
 package com.QuanLyChungCu_v2.QuanLyChungCu.controllers;
 
+import com.QuanLyChungCu_v2.QuanLyChungCu.dto.AccountDTO;
+import com.QuanLyChungCu_v2.QuanLyChungCu.dto.AuthDTO;
 import com.QuanLyChungCu_v2.QuanLyChungCu.dto.ResponseData;
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Room;
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.UserEntity;
@@ -35,11 +37,13 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam("username") String username,
-                        @RequestParam("password") String password,
+    public String login(@ModelAttribute("loginForm") AuthDTO authDTO,
                         RedirectAttributes redirectAttributes) {
-        if ("admin".equals(username) && "123456".equals(password)) {
-            return "redirect:/home";
+
+        System.out.println("Username:"+ authDTO.getUsername());
+        System.out.println("Password:"+ authDTO.getPassword());
+        if ("admin".equals(authDTO.getUsername()) && "123456".equals(authDTO.getPassword())) {
+            return "redirect:/";
         } else {
             // redirectAttributes.addFlashAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng!");
             return "redirect:/login";
