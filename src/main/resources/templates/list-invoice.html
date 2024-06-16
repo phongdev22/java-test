@@ -1,0 +1,74 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"
+        integrity="sha512-r6rDA7W6ZeQhvl8S7yRVQUKVHdexq+GAlNkNNqVC7YyIV+NwqCTJe2hDWCiffTyRNOeGEzRRJ9ifvRm/HCzGYg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="text-center">#</th>
+      <th class="text-center">Room Id</th>
+      <th class="text-center">User Id</th>
+      <th class="text-center">Description</th>
+      <th class="text-center">Payment Code</th>
+      <th class="text-center">Amount</th>
+      <th class="text-center">Service Type</th>
+      <th class="text-center">Payment Date</th>
+      <th class="text-center">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr class="align-middle" th:each="invoice, index : ${invoices}">
+    <td class="align-middle text-center" th:text="${index.index + 1}"></td>
+    <td class="align-middle text-center" th:text="${invoice.roomId}" th:onclick="'javascript:openForm(\'edit\', ' + ${invoice.id} + ');'"></td>
+    <td class="align-middle text-center" th:text="${invoice.userId}" th:onclick="'javascript:openForm(\'edit\', ' + ${invoice.id} + ');'"></td>
+    <td class="align-middle text-center" th:text="${invoice.description}" th:onclick="'javascript:openForm(\'edit\', ' + ${invoice.id} + ');'"></td>
+    <td class="align-middle text-center" th:text="${invoice.paymentCode}" th:onclick="'javascript:openForm(\'edit\', ' + ${invoice.id} + ');'"></td>
+    <td class="align-middle text-center" th:text="${invoice.amount}" th:onclick="'javascript:openForm(\'edit\', ' + ${invoice.id} + ');'"></td>
+    <td class="align-middle text-center" th:text="${invoice.serviceType}" th:onclick="'javascript:openForm(\'edit\', ' + ${invoice.id} + ');'"></td>
+    <td class="align-middle text-center" th:text="${invoice.paymentDate}" th:onclick="'javascript:openForm(\'edit\', ' + ${invoice.id} + ');'"></td>
+    <td class="align-middle" >
+      <button th:if="${!invoice.isPaid}" class="btn btn-sm btn-square btn-success" th:attr="onclick='createPayment(\'' + ${invoice.id} + '\')'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-qr-code-scan" viewBox="0 0 16 16">
+          <path d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1v2.5a.5.5 0 0 1-1 0zm12 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V1h-2.5a.5.5 0 0 1-.5-.5M.5 12a.5.5 0 0 1 .5.5V15h2.5a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H15v-2.5a.5.5 0 0 1 .5-.5M4 4h1v1H4z"/>
+          <path d="M7 2H2v5h5zM3 3h3v3H3zm2 8H4v1h1z"/>
+          <path d="M7 9H2v5h5zm-4 1h3v3H3zm8-6h1v1h-1z"/>
+          <path d="M9 2h5v5H9zm1 1v3h3V3zM8 8v2h1v1H8v1h2v-2h1v2h1v-1h2v-1h-3V8zm2 2H9V9h1zm4 2h-1v1h-2v1h3zm-4 2v-1H8v1z"/>
+          <path d="M12 9h2V8h-2z"/>
+        </svg>
+      </button>
+
+      <button class="btn btn-sm btn-square" th:if="${invoice.isPaid}" style="visibility: hidden"></button>
+
+      <button class="btn btn-sm btn-square btn-danger" th:attr="onclick='deleteInvoice(\'' + ${invoice.id} + '\')'">
+        <i class="fa-regular fa-trash-can" style="color: white"></i>
+      </button>
+    </td>
+  </tr>
+  </tbody>
+  <tfoot th:if="${totalPages > 1}">
+  <tr>
+    <td colspan="5"></td>
+    <td colspan="4">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination" style="justify-content: flex-end;">
+          <li th:classappend="${currentPage > 1} ? 'page-item' : 'page-item disabled'">
+            <button class="page-link" th:onclick="|loadTable(${currentPage - 1})|">Previous</button>
+          </li>
+
+          <li th:each="i:${#numbers.sequence(1, totalPages)}"
+              th:classappend="${currentPage == i} ? 'page-item active' : 'page-item'">
+
+            <button class="page-link"
+                    th:style="${currentPage == i} ? 'border-color: #cfd6df; background-color: #007bff;' : ''"
+                    th:onclick="|loadTable(${i})|"
+                    th:text="${i}">1</button>
+          </li>
+
+          <li th:classappend="${currentPage < totalPages} ? 'page-item' : 'page-item disabled'">
+            <button class="page-link" th:onclick="|loadTable(${currentPage + 1})|">Next</button>
+          </li>
+        </ul>
+      </nav>
+    </td>
+  </tr>
+  </tfoot>
+</table>

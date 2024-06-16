@@ -16,6 +16,5 @@ public class SurveyQuestion  {
     private String questionText;
     private String questionType;
     private Integer surveyId;
-    // private List<SurveyOption> surveyoptionSet;
-    // private List<SurveyAnswer> surveyanswerSet;
+    private Integer order;
 }

@@ -15,23 +15,44 @@
         <div class="mx-n1">
         <span class="btn d-inline-flex btn-sm btn-primary mx-1">
             <span class="pe-2 d-flex align-items-center"><i class="bi bi-plus"></i></span>
-            <span>Create QR</span>
+            <span>Create Invoice</span>
         </span>
         </div>
     </div>
 </div>
 
 <th:block layout:fragment="content">
-    <div id="content-wrapper" class="mt-3">
+    <div id="content-wrapper" class="mt-2">
+        <div class="col-5 my-2 d-flex align-items-center">
+            <input id="search" type="text" class="col-9 form-control" placeholder="Search here...">
+            <button type="button"
+                    onclick="loadTable()"
+                    class="btn btn-sm mx-2 d-flex align-items-center justify-content-center"
+                    th:style="'width: 35px; height:35px; border-radius: 50%; box-shadow: -5px 1px 10px #bcbcbc, -7px -7px 15px #ffffff'">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
         <div id="list-invoices" ></div>
         <div id="form-modal" class="modal fade" tabindex="-1"></div>
     </div>
 </th:block>
 
 <th:block layout:fragment="scripts">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"
+            integrity="sha512-r6rDA7W6ZeQhvl8S7yRVQUKVHdexq+GAlNkNNqVC7YyIV+NwqCTJe2hDWCiffTyRNOeGEzRRJ9ifvRm/HCzGYg=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+
     <script th:inline="javascript">
         $(document).ready(function (){
-            loadTable()
+            loadTable();
+
+            $('#search').on('keydown', function(event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    loadTable();
+                }
+            });
         })
 
         function openForm(mode, id){
@@ -58,6 +79,13 @@
                 error: (err) => {
                     console.log("[GET] "+ location.href + ":", err)
                 }
+            })
+        }
+
+        function createPayment(id){
+            console.log("Pay for invoice id:", id)
+            $.ajax({
+                url: "payments/"
             })
         }
 

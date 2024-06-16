@@ -1,0 +1,51 @@
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="text-center">#</th>
+        <th class="text-center">Title</th>
+        <th class="text-center">Description</th>
+        <th class="text-center">CreatedAt</th>
+        <th class="text-center">Action</th>
+      </tr>
+    </thead>
+  <tbody>
+    <tr th:each="survey, index : ${surveys}">
+      <td class="text-center" th:text="${index.index + 1}"></td>
+      <td class="text-center" th:text="${survey.title ?: 'Không có dữ liệu'}"></td>
+      <td class="text-center" th:text="${survey.description ?: 'Không có dữ liệu'}"></td>
+      <td class="text-center" th:text="${survey.createdAt ?: 'Không có dữ liệu'}"></td>
+      <td class="text-center" >
+        <button class="btn btn-sm btn-square btn-neutral btn-danger" th:attr="onclick='deleteRoom(\'' + ${survey.id} + '\')'">
+          <i class="fa-regular fa-trash-can" style="color: white"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot th:if="${totalPages > 1}">
+  <tr>
+    <td colspan="3"></td>
+    <td colspan="2">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination" style="justify-content: flex-end;">
+          <li th:classappend="${currentPage > 1} ? 'page-item' : 'page-item disabled'">
+            <button class="page-link" th:onclick="|loadTable(${currentPage - 1})|">Previous</button>
+          </li>
+
+          <li th:each="i:${#numbers.sequence(1, totalPages)}"
+              th:classappend="${currentPage == i} ? 'page-item active' : 'page-item'">
+
+            <button class="page-link"
+                    th:style="${currentPage == i} ? 'border-color: #cfd6df; background-color: #007bff;' : ''"
+                    th:onclick="|loadTable(${i})|"
+                    th:text="${i}">1</button>
+          </li>
+
+          <li th:classappend="${currentPage < totalPages} ? 'page-item' : 'page-item disabled'">
+            <button class="page-link" th:onclick="|loadTable(${currentPage + 1})|">Next</button>
+          </li>
+        </ul>
+      </nav>
+    </td>
+  </tr>
+  </tfoot>
+</table>

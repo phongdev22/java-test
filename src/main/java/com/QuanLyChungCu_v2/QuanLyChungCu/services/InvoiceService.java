@@ -32,4 +32,8 @@ public class InvoiceService {
     public Page<Payment> GetAllPayment(Pageable pageable){
         return paymentRepo.findAll(pageable);
     }
+
+    public Invoice GetById(Integer id){
+        return invoiceRepo.findById(id).get();
+    }
 }

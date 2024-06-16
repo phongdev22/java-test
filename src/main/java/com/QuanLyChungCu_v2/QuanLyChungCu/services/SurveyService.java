@@ -27,4 +27,8 @@ public class SurveyService {
     public Page<Survey> GetAll(Pageable pageable){
         return surveyRepo.findAll(pageable);
     }
+
+    public Page<Survey> SearchByKeyword(Pageable pageable, String keyword){
+        return surveyRepo.SearchByKeyword(keyword, pageable);
+    }
 }
