@@ -21,6 +21,10 @@ public class InvoiceService {
     @Autowired
     private PaymentRepository paymentRepo;
 
+    public void Save(Invoice invoice){
+        invoiceRepo.save(invoice);
+    }
+
     public List<Invoice> GetAllInvoiceByUserId(){
         return new ArrayList<Invoice>();
     }
@@ -29,11 +33,20 @@ public class InvoiceService {
         return invoiceRepo.findAll(pageable);
     }
 
+    public Page<Invoice> GetAllByKeyword(Pageable pageable, String keyword){
+
+        return invoiceRepo.findAllByKeyword(keyword, pageable);
+    }
+
     public Page<Payment> GetAllPayment(Pageable pageable){
         return paymentRepo.findAll(pageable);
     }
 
     public Invoice GetById(Integer id){
         return invoiceRepo.findById(id).get();
+    }
+
+    public void Delete(Integer id){
+        invoiceRepo.deleteById(id);
     }
 }

@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,16 +38,24 @@ public class PaymentController {
         return new ResponseEntity<>(new Object(), HttpStatus.OK);
     }
 
-    @GetMapping("/create")
-    public ResponseEntity<Object> createPaymentUrl(@RequestParam("orderId")Integer id){
+    @GetMapping("/create/{invoiceId}")
+    public ResponseEntity<Object> createPaymentUrl(@PathVariable("invoiceId")Integer id){
+        HashMap<String, Object> res = new HashMap<>();
         try{
             Invoice invoice = invoiceService.GetById(id);
-            double amount = invoice.getAmount().doubleValue();
+            int amount = invoice.getAmount().intValue();
             String orderInfo = "Pay for invoice code " + invoice.getId();
             String paymentUrl = vnPayService.CreateUrlPayment(amount, orderInfo, "http://localhost:8080");
-            return new ResponseEntity<>(new Object(), HttpStatus.OK);
+
+            res.put("code", 0);
+            res.put("message", "Success!");
+            res.put("paymentUrl", paymentUrl);
+            res.put("data", invoice);
+            return new ResponseEntity<>(res, HttpStatus.OK);
         }catch(Exception ex){
-            return new ResponseEntity<>(new Object(), HttpStatus.OK);
+            res.put("code", 1);
+            res.put("message", "Fail!");
+            return new ResponseEntity<>(res, HttpStatus.OK);
         }
     }
 }

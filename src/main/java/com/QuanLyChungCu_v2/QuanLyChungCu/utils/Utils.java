@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Random;
 
 public class Utils {
     public static void saveFile(MultipartFile file, String folder, String fileName) throws IOException{
@@ -27,5 +28,15 @@ public class Utils {
         } catch (IOException ex) {
             throw new IOException(ex.getMessage());
         }
+    }
+
+    public static String generateCode(int length){
+        Random rnd = new Random();
+        String chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            sb.append(chars.charAt(rnd.nextInt(chars.length())));
+        }
+        return sb.toString();
     }
 }

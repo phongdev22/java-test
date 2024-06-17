@@ -1,10 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Invoice</title>
-</head>
-<body>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-body">
+            <input type="hidden" id="invoice-id"/>
 
-</body>
-</html>
+            <div class="form-group row">
+                <div class="col-6">
+                    <label for="room-name">Room</label>
+                    <input type="text" class="form-control" id="room-name" name="roomId" required>
+                </div>
+                <div class="col-6">
+                    <label for="paymentCode">PaymentCode</label>
+                    <input type="text" disabled th:value="${invoice.paymentCode}" class="form-control" id="paymentCode" name="paymentCode" required>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-6">
+                    <label for="service-type">Services</label>
+                    <select class="form-control p-0 px-2" id="service-type" name="serviceId" required>
+                        <option value="">Choose option</option>
+                        <option value="electric">Electric</option>
+                        <option value="water">Water</option>
+                        <option value="internet">Internet</option>
+                        <option value="cleaning">Cleaning</option>
+                        <option value="secure">Secure</option>
+                        <option value="parking">Parking</option>
+                        <option value="lift">Elevator</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label for="status">Status</label>
+                    <select class="form-control p-0 px-2" id="status" name="status" disabled>
+                        <option value="0" th:selected="${!invoice.isPaid}">Pending</option>
+                        <option value="1" th:selected="${invoice.isPaid}">Paid</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="number" class="form-control" id="amount" name="amount" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" class="form-control" id="description" name="description" required>
+            </div>
+
+            <div class="form-group">
+                <label for="dueDate">Due Date</label>
+                <input type="date" class="form-control" id="dueDate" name="dueDate" required>
+            </div>
+        </div>
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-sm btn-primary" onclick="saveChanges()">Save</button>
+        </div>
+    </div>
+</div>

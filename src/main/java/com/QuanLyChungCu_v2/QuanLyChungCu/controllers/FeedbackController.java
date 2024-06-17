@@ -28,17 +28,11 @@ public class FeedbackController {
         return "feedback-list";
     }
 
-    @GetMapping("/add")
+    @GetMapping("/create")
     public String showAddFeedbackForm(Model model) {
         Feedback feedback = new Feedback();
         model.addAttribute("feedback", feedback);
         return "form-feedback";
-    }
-
-    @PostMapping("/add")
-    public String saveFeedback(@ModelAttribute("feedback") Feedback feedback) {
-        feedbackService.saveFeedback(feedback);
-        return "redirect:/feedback/list";
     }
 
     @GetMapping("/edit/{id}")

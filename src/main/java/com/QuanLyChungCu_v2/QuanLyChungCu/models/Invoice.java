@@ -18,13 +18,19 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    public String paymentCode;
     private String description;
     private BigDecimal amount;
     private String status;
     private Date dueDate;
 
+    private Date paymentDate;
+    public Boolean isPaid;
+
+    private String serviceType;
+
     private Integer roomId;
-    private Integer serviceId;
+    private Integer userId; // User ID của người thanh toán
 
     private Date createdAt;
     private Date updatedAt;

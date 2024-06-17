@@ -1,0 +1,63 @@
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{mainLayout}"
+>
+<head>
+    <meta charset="UTF-8" />
+    <title>Profile</title>
+</head>
+<th:block layout:fragment="content">
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-header">
+                <h2>Your Profile</h2>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <img src="https://placehold.co/150" width="200px" height="200px" class="img-fluid rounded-circle object-fit-cover" alt="Avatar" id="avatarPreview">
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="row mb-3">
+                            <label for="firstName" class="col-sm-2 col-form-label">First Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="firstName" placeholder="John">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="lastName" class="col-sm-2 col-form-label">Last Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="lastName" placeholder="Doe">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="avatarUpload" class="col-sm-2 col-form-label">Avatar</label>
+                            <div class="col-sm-10">
+                                <input type="file" onchange="renderAvatar(this)" id="avatarUpload" class="form-control-file">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="scripts">
+    <script th:inline="javascript">
+        function renderAvatar(that){
+            const avatarPreview = $('#avatarPreview');
+            const file = that.files[0];
+            console.log(file);
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    avatarPreview.attr('src', reader.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</th:block>
+

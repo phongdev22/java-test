@@ -1,10 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{mainLayout}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Write Feedback</title>
 </head>
-<body>
+<div layout:fragment="content" class="container">
+    <h1>Write feedback</h1>
+    <form id="feedback-form" class="row">
+        <div class="col-md-4">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
 
-</body>
-</html>
+        <div class="col-md-4">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="text" class="form-control" id="phone" name="email" required>
+        </div>
+
+        <div class="col-md-4">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+
+        <div class="col-12 mt-4">
+            <label for="editor" class="form-label">Content</label>
+            <textarea id="editor" name="feedback" class="form-control" required></textarea>
+        </div>
+
+        <div class="col-12 mt-3">
+            <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+<th:block layout:fragment="scripts">
+    <script th:src="@{https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded',async function () {
+            const editor = await ClassicEditor
+                .create(document.querySelector('#editor'), {
+                    height: '500px'
+                })
+                .then(editor => {
+                    return editor;
+                })
+
+            $('#submit-btn').click(function (event) {
+                const name = $('#name').val();
+                const phone = $('#phone').val();
+                const email = $('#email').val();
+                const feedback = editor.getData();
+
+                $.ajax({
+                    url: '/feedback/submit',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        feedback: feedback
+                    }),
+                    success: function (response) {
+                        console.log('Data sent successfully:', response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error sending data:', error);
+                    }
+                });
+            });
+        });
+    </script>
+</th:block>

@@ -13,6 +13,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
     @Query("SELECT f FROM Feedback f WHERE f.userId = :userId")
     List<Feedback> getFeedbacksByUserId(Integer userId);
 
-    @Query("SELECT f FROM Feedback f WHERE f.userId = :userId")
-    Optional<Feedback> findByIdAndUserId(Integer id, Integer userId);
+//    @Query("SELECT f FROM Feedback f WHERE f.userId = :userId")
+//    Optional<Feedback> findByIdAndUserId(Integer id, Integer userId);
 }

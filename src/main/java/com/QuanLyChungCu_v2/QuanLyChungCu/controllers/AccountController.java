@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +60,12 @@ public class AccountController {
         model.addAttribute("user", userEntityService.findById(userId));
         //model.addAttribute("media", mediaService.findByMapping(roomId, "Room", "Image" ));
         return "form-account";
+    }
+
+//    @GetMapping("/profile/{userId}") @PathVariable("userId")Integer userId
+    @GetMapping("/profile")
+    public String getProfile(){
+        return "page-profile";
     }
 
     @PostMapping
