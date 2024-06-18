@@ -1,0 +1,38 @@
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{mainLayout}"
+>
+<head>
+    <meta charset="UTF-8" />
+    <title>Register for relatives</title>
+</head>
+
+<div layout:fragment="page-header" class="container-fluid row align-items-center">
+    <div class="col-sm-6 col-12 mb-4 mb-sm-0">
+        <a th:href="@{/relative-registration}" class="h2 mb-0 ls-tight">Register for relatives</a>
+    </div>
+
+    <div onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
+        <div class="mx-n1">
+        <span class="btn d-inline-flex btn-sm btn-primary mx-1">
+            <span class="pe-2 d-flex align-items-center"><i class="bi bi-plus"></i></span>
+            <span>Create new</span>
+        </span>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="content">
+    <div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="scripts">
+    <script th:inline="javascript">
+        function openForm(mode, id){
+
+        }
+    </script>
+</th:block>
+

@@ -1,10 +1,12 @@
 
 package com.QuanLyChungCu_v2.QuanLyChungCu.controllers;
 
+import com.QuanLyChungCu_v2.QuanLyChungCu.models.Media;
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Room;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.MediaService;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.RoomService;
 
+import com.QuanLyChungCu_v2.QuanLyChungCu.utils.Utils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,10 +59,30 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> saveOrUpdateRoom(@ModelAttribute Room room) {
+    public ResponseEntity<Map<String, String>> saveOrUpdateRoom(@ModelAttribute Room room,
+                           @RequestParam(value = "files", required = false) MultipartFile[] files) {
+
         Map<String, String> response = new HashMap<>();
         try{
-            roomService.Save(room);
+            Room savedRoom = roomService.Save(room);
+
+            List<Media> mediaList = new ArrayList<>();
+
+            if (files != null && files.length > 0) {
+                for (MultipartFile file : files) {
+                    String fileName = file.getOriginalFilename();
+                    Utils.saveFile(file, "room-images", fileName);
+
+                    Media media = new Media();
+                    media.setType("image");
+                    media.setSource("room-images/" + fileName);
+                    media.setMappingId(savedRoom.getId());
+                    mediaList.add(media);
+                }
+            }
+
+            List<Media> savedMediaList = roomService.saveMedia(mediaList);
+
             response.put("code", "1");
             response.put("message", "Save successfully!");
             return  new ResponseEntity<>(response, HttpStatus.OK);

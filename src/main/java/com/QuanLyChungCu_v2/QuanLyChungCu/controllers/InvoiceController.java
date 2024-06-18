@@ -66,7 +66,7 @@ public class InvoiceController {
         invoice.setIsPaid(false);
 
         model.addAttribute("invoice",invoice);
-        model.addAttribute("users", userEntityService.findAll());
+        model.addAttribute("rooms", roomService.findAll());
         return "form-invoice";
     }
 

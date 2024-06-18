@@ -31,10 +31,23 @@
                                 <input type="text" class="form-control" id="lastName" placeholder="Doe">
                             </div>
                         </div>
+
+                        <div class="row form-group mb-2 d-flex align-items-center">
+                            <span class="col-sm-2 col-form-label">Change passsword</span>
+                            <div class="row col-sm-10 d-flex justify-content-between" th:style="${'padding-right:0'}">
+                                <div class="col-6 pr-0">
+                                    <input type="text" class="form-control" id="old-pass" placeholder="old password">
+                                </div>
+                                <div class="col-6 pr-0">
+                                    <input type="text" class="form-control" id="new-pass" placeholder="new password">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row mb-3">
                             <label for="avatarUpload" class="col-sm-2 col-form-label">Avatar</label>
                             <div class="col-sm-10">
-                                <input type="file" onchange="renderAvatar(this)" id="avatarUpload" class="form-control-file">
+                                <input type="file" onchange="renderAvatar(this)" id="avatarUpload" class="form-control">
                             </div>
                         </div>
                     </div>

@@ -1,7 +1,6 @@
 package com.QuanLyChungCu_v2.QuanLyChungCu.controllers;
 
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Invoice;
-import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.PaymentRepository;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.InvoiceService;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.VNPayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +25,21 @@ public class PaymentController {
     private InvoiceService invoiceService;
 
     @GetMapping("/vnpay")
-    public ResponseEntity<Object> Callback(@RequestParam Map<String, String> params){
+    public String Callback(@RequestParam Map<String, String> params){
+        System.out.println("Da goi callback");
         if (vnPayService.VerifySignature(params)) {
             String orderId = params.get("vnp_TxnRef");
             String responseCode = params.get("vnp_ResponseCode");
 
             String message = "00".equals(responseCode) ? "Success" : "Fail";
             vnPayService.UpdatePaymentStatus(orderId, message);
-
         }
+        return "redirect:/invoices";
+    }
+
+    @GetMapping("/status/{id}")
+    public ResponseEntity<Object> GetStatusInvoice(@PathVariable("id")Integer id){
+
         return new ResponseEntity<>(new Object(), HttpStatus.OK);
     }
 

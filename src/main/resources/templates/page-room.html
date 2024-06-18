@@ -80,27 +80,34 @@
 			}
 
 			function saveRoom() {
-				const roomData = {
-					id: $("#room-id").val(),
-					code: $("#code").val(),
-					name: $("#name").val(),
-					description: $("#description").val(),
-					price: $("#price").val(),
-					capacity: $("#capacity").val(),
-					status: $("#status").val(),
-				};
+				const formData = new FormData();
+				formData.append('id', $('#room-id').val());
+				formData.append('code', $('#code').val());
+				formData.append('name', $('#name').val());
+				formData.append('description', $('#description').val());
+				formData.append('price', $('#price').val());
+				formData.append('capacity', $('#capacity').val());
+				formData.append('roomType', $('#room-type').val());
+				formData.append('status', $('#status').val());
+
+				// Append files to the form data
+				const files = $('#files')[0].files;
+				for (let i = 0; i < files.length; i++) {
+					formData.append('files', files[i]);
+				}
 
 				$.ajax({
-					url: "/rooms",
-					type: "POST",
-					data: roomData,
+					url: '/rooms',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
 					success: (data) => {
 						console.log("function saveRoom():", data);
 						$.alert(data.message);
 						loadTable();
 					},
 				});
-				console.log("Room data:", roomData);
 			}
 
 			function deleteRoom(id) {

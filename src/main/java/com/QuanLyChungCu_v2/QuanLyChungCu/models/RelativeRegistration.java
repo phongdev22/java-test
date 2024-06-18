@@ -8,18 +8,21 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "parkingright")
+@Table(name = "relative_registration")
 @Data
 @NoArgsConstructor
-public class ParkingRight{
+public class RelativeRegistration {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer familyMemberId;
-    private String typeOfVehicle;
-    private String licensePlates;
+    private Integer userId;
+    private String relativeName;
+    private String relativePhone;
+    private String relationship;
+    private String vehicleRegistrationNumber;
+    private Date registrationDate;
+    private Date expiryDate;
     private String status;
     private Date createdAt;
     private Date updatedAt;
-    // private Relative relativeId;
 }

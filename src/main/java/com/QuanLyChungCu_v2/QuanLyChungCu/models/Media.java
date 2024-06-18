@@ -20,5 +20,4 @@ public class Media {
     private String type;
     private String source;
     private Integer mappingId;
-    private String tableName;
 }

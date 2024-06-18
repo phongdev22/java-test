@@ -1,16 +1,14 @@
 package com.QuanLyChungCu_v2.QuanLyChungCu.services;
 
+import com.QuanLyChungCu_v2.QuanLyChungCu.models.Invoice;
 import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.InvoiceRepository;
-import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -79,7 +77,7 @@ class VNPayConfig {
                 sb.append("&");
             }
         }
-        return hmacSHA512(vnp_HashSecret,sb.toString());
+        return hmacSHA512(vnp_HashSecret, sb.toString());
     }
 
     public static String hmacSHA512(final String key, final String data) {
@@ -121,9 +119,6 @@ class VNPayConfig {
 public class VNPayService {
 
     @Autowired
-    private PaymentRepository paymentRepo;
-
-    @Autowired
     private InvoiceRepository invoiceRepo;
 
     public void CreateInvoice(){
@@ -131,7 +126,11 @@ public class VNPayService {
     }
 
     public void UpdatePaymentStatus(String orderId, String message){
-
+        Invoice invoice = invoiceRepo.findByPaymentCode(orderId);
+        if(invoice != null){
+            invoice.setIsPaid(true);
+            invoiceRepo.save(invoice);
+        }
     }
 
     public String CreateUrlPayment(int total, String orderInfor, String urlReturn){
@@ -204,17 +203,19 @@ public class VNPayService {
 
     public Boolean VerifySignature(Map<String, String> params){
         Map<String, String> paramsCopy = new TreeMap<>(params);
+        String vnp_SecureHash = paramsCopy.get("vnp_SecureHash");
 
-        String receivedSignature = paramsCopy.remove("vnp_SecureHash");
+        if (paramsCopy.containsKey("vnp_SecureHashType"))
+        {
+            paramsCopy.remove("vnp_SecureHashType");
+        }
 
-        String data = paramsCopy.entrySet().stream()
-                .filter(entry -> entry.getValue() != null && !entry.getValue().isEmpty())
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining("&"));
+        if (paramsCopy.containsKey("vnp_SecureHash"))
+        {
+            paramsCopy.remove("vnp_SecureHash");
+        }
 
-        System.out.println("Data VNPay return params: " + data);
-        String computedSignature = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, data);
-        return receivedSignature != null && receivedSignature.equals(computedSignature);
+        String signValue = VNPayConfig.hashAllFields(paramsCopy);
+        return vnp_SecureHash != null && vnp_SecureHash.equals(signValue);
     }
-
 }

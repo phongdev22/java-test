@@ -3,6 +3,8 @@ package com.QuanLyChungCu_v2.QuanLyChungCu.services;
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Item;
 import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,6 +15,18 @@ import java.util.List;
 public class StorageService {
     @Autowired
     private ItemRepository repo;
+
+    public Page<Item> getAll(Pageable pageable){
+        return repo.findAll(pageable);
+    }
+
+    public Page<Item> searchByKeyword(String keyword, Pageable pageable){
+        if (keyword == null || keyword.isEmpty()) {
+            return repo.findAll(pageable);
+        } else {
+            return repo.findByKeyword(keyword, pageable);
+        }
+    }
 
     public List<Item> GetItemsByUserId(Integer userId){
         return repo.getItemsByUserId(userId);
@@ -31,5 +45,9 @@ public class StorageService {
         } else {
             throw new RuntimeException("Không tìm thấy Item với ID: " + itemId);
         }
+    }
+
+    public void delete(Integer id){
+        repo.deleteById(id);
     }
 }

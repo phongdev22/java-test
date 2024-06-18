@@ -7,15 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 
 @Controller
 @RequestMapping
 public class HomeController {
-
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String Home(Model model){
-        System.out.print("Test Home");
+    @GetMapping("/")
+    public String home(HttpSession session) {
         return "home";
     }
 

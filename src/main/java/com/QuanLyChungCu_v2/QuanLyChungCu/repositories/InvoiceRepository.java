@@ -14,4 +14,6 @@ import java.util.List;
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
     @Query("SELECT i FROM Invoice i WHERE LOWER(i.description) LIKE %:keyword% OR LOWER(i.paymentCode) LIKE %:keyword% OR CAST(i.roomId AS string) LIKE %:keyword%")
     Page<Invoice> findAllByKeyword(@RequestParam("keyword") String keyword, Pageable pageable);
+
+    Invoice findByPaymentCode(String paymentCode);
 }

@@ -1,17 +1,20 @@
 package com.QuanLyChungCu_v2.QuanLyChungCu.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
-@Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SurveyDTO {
-    private String title;
-    private String description;
-    private Set<SurveyQuestionDTO> questions;
-    private Set<SurveyAnswerDTO> answers;
+    public Integer id;
+    public String title;
+    public String description;
+    public Date startDate;
+    public Date endDate;
+    public List<SurveyQuestionDTO> questions;
 }

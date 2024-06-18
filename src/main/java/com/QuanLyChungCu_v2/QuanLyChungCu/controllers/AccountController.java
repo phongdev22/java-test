@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,20 +31,26 @@ public class AccountController {
     private UserEntityService userEntityService;
 
     @GetMapping("")
-    public String Index(){
+    public String Index() {
         return "page-account";
     }
 
     @PostMapping("/login")
     public String login(@ModelAttribute("loginForm") AuthDTO authDTO,
-                        RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            HttpSession session) {
+        String userName = authDTO.getUsername();
+        String password = authDTO.getPassword();
 
-        System.out.println("Username:"+ authDTO.getUsername());
-        System.out.println("Password:"+ authDTO.getPassword());
-        if ("admin".equals(authDTO.getUsername()) && "123456".equals(authDTO.getPassword())) {
-            return "redirect:/";
-        } else {
-            // redirectAttributes.addFlashAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng!");
+        try {
+            Object user = userEntityService.login(userName, password);
+            session.setAttribute("user", user);
+            if (user instanceof UserEntity && ((UserEntity) user).isFirstLogin()) {
+                return "redirect:/users/profile";
+            } else {
+                return "redirect:/";
+            }
+        } catch (IllegalStateException e) {
             return "redirect:/login";
         }
     }
@@ -58,13 +65,14 @@ public class AccountController {
     public String updateRoomView(Model model, @PathVariable("userId") int userId) {
         System.out.println(userId);
         model.addAttribute("user", userEntityService.findById(userId));
-        //model.addAttribute("media", mediaService.findByMapping(roomId, "Room", "Image" ));
+        // model.addAttribute("media", mediaService.findByMapping(roomId, "Room",
+        // "Image" ));
         return "form-account";
     }
 
-//    @GetMapping("/profile/{userId}") @PathVariable("userId")Integer userId
+    // @GetMapping("/profile/{userId}") @PathVariable("userId")Integer userId
     @GetMapping("/profile")
-    public String getProfile(){
+    public String getProfile() {
         return "page-profile";
     }
 
@@ -86,7 +94,8 @@ public class AccountController {
     }
 
     @PutMapping("/{userId}/change-password")
-    public ResponseEntity<ResponseData> changePassword(@PathVariable("userId") int userId, @RequestBody String newPassword) {
+    public ResponseEntity<ResponseData> changePassword(@PathVariable("userId") int userId,
+            @RequestBody String newPassword) {
         try {
             UserEntity entity = new UserEntity();
             entity.setId(userId);
@@ -99,22 +108,23 @@ public class AccountController {
 
     // update for only role user
     @PostMapping("/update/status/{userId}")
-    public ResponseEntity<HashMap<String, String>> changeStatus(@PathVariable("userId") int userId){
+    public ResponseEntity<HashMap<String, String>> changeStatus(@PathVariable("userId") int userId) {
         HashMap<String, String> response = new HashMap<>();
         try {
             userEntityService.UpdateStatus(userId);
-            response.put("code","0");
-            response.put("message","Update successfully!");
+            response.put("code", "0");
+            response.put("message", "Update successfully!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            response.put("code","1");
-            response.put("message","Update successfully!");
+            response.put("code", "1");
+            response.put("message", "Update successfully!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
     @PostMapping("/{userId}/upload-avatar")
-    public ResponseEntity<String> handleFileUpload(@PathVariable("userId") int userId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> handleFileUpload(@PathVariable("userId") int userId,
+            @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("Please select a file to upload");
         }
@@ -122,7 +132,7 @@ public class AccountController {
             String fileName = "avatar_" + userId;
 
             userEntityService.UpdateAvatar(userId, fileName);
-            Utils.saveFile(file,"avatar", fileName);
+            Utils.saveFile(file, "avatar", fileName);
 
             return ResponseEntity.ok("Avatar uploaded successfully");
         } catch (Exception ex) {
@@ -132,23 +142,21 @@ public class AccountController {
 
     @GetMapping("/list")
     public String getAll(@RequestParam(defaultValue = "1") int currentPage,
-                         @RequestParam(defaultValue = "10") int pageSize,
-                         @RequestParam(defaultValue = "") String keyword,
-                         Model model){
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "") String keyword,
+            Model model) {
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         List<UserEntity> users;
 
-        if(keyword == null || keyword.isEmpty()){
+        if (keyword == null || keyword.isEmpty()) {
             users = userEntityService.getAll(pageable).getContent();
-        }else{
+        } else {
             users = userEntityService.findAll();
             String finalKeyword = keyword.toLowerCase();
-            users.removeIf(user ->
-                    !user.getEmail().toLowerCase().contains(finalKeyword) &&
+            users.removeIf(user -> !user.getEmail().toLowerCase().contains(finalKeyword) &&
                     !user.getFirstname().toLowerCase().contains(finalKeyword) &&
                     !user.getLastname().toLowerCase().contains(finalKeyword) &&
-                    !user.getPhone().toLowerCase().contains(finalKeyword)
-            );
+                    !user.getPhone().toLowerCase().contains(finalKeyword));
         }
 
         model.addAttribute("users", users);

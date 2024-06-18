@@ -6,7 +6,12 @@
             <div class="form-group row">
                 <div class="col-6">
                     <label for="room-name">Room</label>
-                    <input type="text" class="form-control" id="room-name" name="roomId" required>
+                    <select class="form-control p-0 px-2" id="room-name">
+                        <option value="">Select a user</option>
+                        <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.code}"></option>
+                    </select>
+
+<!--                    <input type="text" class="form-control" id="room-name" name="roomId" required>-->
                 </div>
                 <div class="col-6">
                     <label for="paymentCode">PaymentCode</label>

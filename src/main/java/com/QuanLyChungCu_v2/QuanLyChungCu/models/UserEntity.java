@@ -21,4 +21,6 @@ public class UserEntity {
     private String status;
     private String roleName;
     private boolean isLock;
+    private boolean isFirstLogin;
+    private Integer roomId;
 }

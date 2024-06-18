@@ -14,12 +14,12 @@ public class MediaService {
     @Autowired
     private MediaRepository repo;
 
-    public List<Media> findByMapping(Integer mappingId, String tableName, String type) {
-        return repo.findByMapping(mappingId, tableName, type);
+    public List<Media> findByMapping(Integer mappingId, String type) {
+        return repo.findByMapping(mappingId, type);
     }
 
-    public Media Save(Media media) {
-        return repo.save(media);
+    public List<Media> saveMedia(List<Media> lstMedia){
+        return repo.saveAll(lstMedia);
     }
 
     public Media Update(Media media){

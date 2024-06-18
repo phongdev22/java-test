@@ -8,15 +8,15 @@
 
 <div layout:fragment="page-header" class="container-fluid row align-items-center">
     <div class="col-sm-6 col-12 mb-4 mb-sm-0">
-        <a th:href="@{/surveys}" class="h2 mb-0 ls-tight">Manage Survey</a>
+        <a th:href="@{/survey}" class="h2 mb-0 ls-tight">Manage Survey</a>
     </div>
 
     <div class="col-sm-6 col-12 text-sm-end">
         <div class="mx-n1">
-            <a href="/surveys/create" class="btn d-inline-flex btn-sm btn-primary mx-1">
+            <span onclick="openForm('add')" class="btn d-inline-flex btn-sm btn-primary mx-1">
                 <span class="pe-2 d-flex align-items-center"><i class="bi bi-plus"></i></span>
                 <span>Create</span>
-            </a>
+            </span>
         </div>
     </div>
 </div>
@@ -32,8 +32,8 @@
                 <i class="bi bi-search"></i>
             </button>
         </div>
-        <div id="list-room" ></div>
-        <div id="form-room" class="modal fade" tabindex="-1"></div>
+        <div id="list-survey" ></div>
+        <div id="form-survey" class="modal fade" tabindex="-1"  data-backdrop="static" data-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true"></div>
     </div>
 </th:block>
 
@@ -52,13 +52,12 @@
 
         function loadTable(page = 1){
             const keyword = $('#search').val();
-            console.log(keyword)
             $.ajax({
-                url: "/surveys/list",
+                url: "/survey/list",
                 type: "GET",
                 data: {currentPage: page, keyword: keyword },
                 success: (data) => {
-                    $("#list-room").html(data)
+                    $("#list-survey").html(data)
                 },
                 error: (err) => {
                     console.log("[GET] Room error:", err)
@@ -67,27 +66,51 @@
         }
 
         function saveChanges(){
-            const roomData = {
-                id: $("#room-id").val(),
-                code: $("#code").val(),
-                name: $("#name").val(),
+            const formData = {
+                id: $("#survey-id").val(),
+                title: $("#title").val(),
                 description: $("#description").val(),
-                price: $("#price").val(),
-                capacity: $("#capacity").val(),
-                status: $("#status").val()
+                startDate:  $("#startDate").val(),
+                endDate: $("#endDate").val()
             }
 
+            const listQuestion = []
+
+            $(".question").each(function(index) {
+                listQuestion.push({
+                    id: $(this).find("input[type=hidden]").val(),
+                    order: index,
+                    text: $(this).find(".q-text").val(),
+                    questionType: $(this).find(".q-type").val()
+                })
+            });
+
+            formData.questions = listQuestion;
+            console.log("Form data:", formData)
+
             $.ajax({
-                url: "/surveys",
+                url: "/survey",
                 type: "POST",
-                data: roomData,
+                data: formData,
                 success: (data)=> {
-                    console.log("function saveRoom():", data)
+                    console.log("function saveChange() survey:", data)
                     $.alert(data.message)
                     loadTable();
                 }
             })
-            console.log("Room data:", roomData);
+        }
+
+        function openForm(mode, id){
+            const url = mode === "add" ? "/survey/create" : "/survey/" + id;
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (data) {
+                    const formModal = $("#form-survey");
+                    formModal.html(data);
+                    formModal.modal("show");
+                },
+            });
         }
 
         function deleteSurvey(id){
@@ -97,10 +120,11 @@
                 buttons: {
                     confirm: function () {
                         $.ajax({
-                            url: "/rooms/delete/"+id,
+                            url: "/survey/delete/"+id,
                             type: "DELETE",
                             success: (data) => {
                                 console.log(data)
+                                $.alert(""+data.message);
                                 loadTable();
                             },
                             error: (error) => {
@@ -111,6 +135,33 @@
                     cancel: function () {}
                 }
             })
+        }
+
+        function createNewQuestion() {
+            const listQuestion = $('#list-question');
+            const questions = $('.question')
+
+            const questionNumber = questions.length;
+            const questionId = `question-${questionNumber + 1}`;
+            const typeId = `type-question-${questionNumber + 1}`;
+
+            const newQuestionHtml = `
+            <div class="question col-12 p-0 d-flex">
+              <input type="hidden" value="">
+              <div class="col-9">
+                <label for="${questionId}">Question ${questionNumber + 1}</label>
+                <input id="${questionId}" type="text" class="q-text form-control px-2" required>
+              </div>
+              <div class="col-3">
+                <label for="${typeId}">Question Type</label>
+                <select id="${typeId}" class="q-type form-control py-0 px-2" required>
+                  <option value="text">Text</option>
+                  <option value="choice">Rating</option>
+                </select>
+              </div>
+            </div>`;
+
+            listQuestion.append(newQuestionHtml);
         }
     </script>
 </th:block>

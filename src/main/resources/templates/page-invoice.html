@@ -38,11 +38,6 @@
 </th:block>
 
 <th:block layout:fragment="scripts">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"
-            integrity="sha512-r6rDA7W6ZeQhvl8S7yRVQUKVHdexq+GAlNkNNqVC7YyIV+NwqCTJe2hDWCiffTyRNOeGEzRRJ9ifvRm/HCzGYg=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"></script>
-
     <script th:inline="javascript">
         $(document).ready(function (){
             loadTable();
@@ -116,8 +111,8 @@
             });
         }
 
-        function loadTable(page = 1){
-            const keyword = $("#search").val()
+        function loadTable(page = 1, search){
+            const keyword = search ?? $("#search").val()
             $.ajax({
                 url: "/invoices/list",
                 type: "GET",
@@ -133,6 +128,9 @@
 
         function createPayment(id){
             console.log("Pay for invoice id:", id)
+            let timeOutId;
+            let count = 0 ;
+            const maxRetries = 15;
             $.ajax({
                 url: "payments/create/"+id,
                 type: "GET",
@@ -140,6 +138,22 @@
                     console.log(data)
                     if(data.code === 0 && data?.paymentUrl){
                         window.open(data.paymentUrl)
+                        timeOutId = setInterval(function (){
+                            $.ajax({
+                                url: "/payments/status/" + id,
+                                type: "GET",
+                                success: function (data){
+                                    if(data.code === 0 && data?.invoiceStatus){
+                                        $.alert("" + data.message);
+                                        clearInterval(timeOutId)
+                                    }
+                                    if(count === maxRetries){
+                                        clearInterval(timeOutId)
+                                    }
+                                }
+                            })
+                            ++count;
+                        }, 60 * 1000)
                     }
                 }
             })

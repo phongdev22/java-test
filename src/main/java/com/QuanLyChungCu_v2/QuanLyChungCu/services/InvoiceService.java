@@ -1,9 +1,7 @@
 package com.QuanLyChungCu_v2.QuanLyChungCu.services;
 
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Invoice;
-import com.QuanLyChungCu_v2.QuanLyChungCu.models.Payment;
 import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.InvoiceRepository;
-import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +16,6 @@ import java.util.List;
 public class InvoiceService {
     @Autowired
     private InvoiceRepository invoiceRepo;
-    @Autowired
-    private PaymentRepository paymentRepo;
 
     public void Save(Invoice invoice){
         invoiceRepo.save(invoice);
@@ -36,10 +32,6 @@ public class InvoiceService {
     public Page<Invoice> GetAllByKeyword(Pageable pageable, String keyword){
 
         return invoiceRepo.findAllByKeyword(keyword, pageable);
-    }
-
-    public Page<Payment> GetAllPayment(Pageable pageable){
-        return paymentRepo.findAll(pageable);
     }
 
     public Invoice GetById(Integer id){

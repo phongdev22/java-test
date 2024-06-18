@@ -4,18 +4,18 @@
         <th class="text-center">#</th>
         <th class="text-center">Title</th>
         <th class="text-center">Description</th>
-        <th class="text-center">CreatedAt</th>
+        <th class="text-center">Created Date</th>
         <th class="text-center">Action</th>
       </tr>
     </thead>
   <tbody>
     <tr th:each="survey, index : ${surveys}">
-      <td class="text-center" th:text="${index.index + 1}"></td>
-      <td class="text-center" th:text="${survey.title ?: 'Không có dữ liệu'}"></td>
-      <td class="text-center" th:text="${survey.description ?: 'Không có dữ liệu'}"></td>
-      <td class="text-center" th:text="${survey.createdAt ?: 'Không có dữ liệu'}"></td>
+      <td class="text-center" th:text="${index.index + 1}" th:attr="onclick='openForm(\'edit\', \'' + ${survey.id} + '\')'"></td>
+      <td class="text-center" th:text="${survey.title ?: 'Không có dữ liệu'}" th:attr="onclick='openForm(\'edit\', \'' + ${survey.id} + '\')'"></td>
+      <td class="text-center" th:text="${survey.description ?: 'Không có dữ liệu'}" th:attr="onclick='openForm(\'edit\', \'' + ${survey.id} + '\')'"></td>
+      <td class="text-center" th:text="${survey.createdDate ?: 'Không có dữ liệu'}" th:attr="onclick='openForm(\'edit\', \'' + ${survey.id} + '\')'"></td>
       <td class="text-center" >
-        <button class="btn btn-sm btn-square btn-neutral btn-danger" th:attr="onclick='deleteRoom(\'' + ${survey.id} + '\')'">
+        <button class="btn btn-sm btn-square btn-neutral btn-danger" th:attr="onclick='deleteSurvey(\'' + ${survey.id} + '\')'">
           <i class="fa-regular fa-trash-can" style="color: white"></i>
         </button>
       </td>

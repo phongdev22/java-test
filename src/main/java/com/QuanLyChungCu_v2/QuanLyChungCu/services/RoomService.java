@@ -1,5 +1,6 @@
 package com.QuanLyChungCu_v2.QuanLyChungCu.services;
 
+import com.QuanLyChungCu_v2.QuanLyChungCu.models.Media;
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Room;
 import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.MediaRepository;
 import com.QuanLyChungCu_v2.QuanLyChungCu.repositories.RoomRepository;
@@ -24,6 +25,10 @@ public class RoomService{
         return repo.findAll(pageable);
     }
 
+    public List<Room> findAll(){
+        return repo.findAll();
+    }
+
     public Page<Room> searchByKeyword(String keyword, Pageable pageable){
         if (keyword == null || keyword.isEmpty()) {
             return repo.findAll(pageable);
@@ -34,16 +39,16 @@ public class RoomService{
 
     public void addOrUpdate(Room entity){}
 
-    public void Save(Room entity){
-            repo.save(entity);
+    public Room Save(Room entity){
+        return repo.saveAndFlush(entity);
     }
 
     public Room getRoomById(Integer id){
         return repo.findById(id).get();
     }
 
-    public void uploadMedia(){
-
+    public List<Media> saveMedia(List<Media> lstMedia){
+        return mediaRepo.saveAll(lstMedia);
     }
 
     public void delete(Integer id){
