@@ -1,6 +1,9 @@
 package com.QuanLyChungCu_v2.QuanLyChungCu.security;
 
+import com.QuanLyChungCu_v2.QuanLyChungCu.models.UserEntity;
 import com.QuanLyChungCu_v2.QuanLyChungCu.security.service.UserDetailsImpl;
+import com.QuanLyChungCu_v2.QuanLyChungCu.services.UserEntityService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -12,6 +15,9 @@ import java.io.IOException;
 
 @Component
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+    @Autowired
+    private UserEntityService userEntityService;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {
@@ -19,10 +25,14 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         if( userDetails.isFirstLogin() ){
-            System.out.println("The user " + userDetails.getAuthorities() + " has logged in.");
+//            System.out.println("The user " + userDetails.getAuthorities() + " has logged in.");
+            UserEntity user = userEntityService.findById(userDetails.getUserId());
+            user.setFirstLogin(false);
+            userEntityService.Save(user);
             response.sendRedirect("/users/profile");
         }
-
-        response.sendRedirect("/");
+        else {
+            response.sendRedirect("/");
+        }
     }
 }

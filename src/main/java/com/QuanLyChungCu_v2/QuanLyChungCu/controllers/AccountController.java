@@ -78,6 +78,7 @@ public class AccountController {
             user.setPassword(passwordEncoder.encode("123456"));
             user.setUsername(user.getPhone());
             user.setRoleName("USER");
+            user.setFirstLogin(true);
             userEntityService.Save(user); // Gọi service để lưu UserEntity
             response.put("code", "1");
             response.put("message", "Save successfully!");
@@ -121,18 +122,18 @@ public class AccountController {
         }
     }
 
-    @PostMapping("/{userId}/upload-avatar")
-    public ResponseEntity<String> handleFileUpload(@PathVariable("userId") int userId,
-            @RequestParam("file") MultipartFile file) {
+    @PostMapping("/upload-avatar")
+    public ResponseEntity<String> handleFileUpload(MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("Please select a file to upload");
         }
         try {
-            String fileName = "avatar_" + userId;
-
-            userEntityService.UpdateAvatar(userId, fileName);
-            Utils.saveFile(file, "avatar", fileName);
-
+            UserEntity user = getUserAuthencated();
+            if(user != null){
+                String fileName = "avatar_" + user.getId();
+                userEntityService.UpdateAvatar(user.getId(), fileName);
+                Utils.saveFile(file, "avatar", fileName);
+            }
             return ResponseEntity.ok("Avatar uploaded successfully");
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload avatar");
