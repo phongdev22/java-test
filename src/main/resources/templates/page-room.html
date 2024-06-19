@@ -2,6 +2,7 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{mainLayout}"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
 >
 	<head>
 		<meta charset="UTF-8" />
@@ -13,13 +14,14 @@
 			<a th:href="@{/rooms}" class="h2 mb-0 ls-tight">Manage room</a>
 		</div>
 
-		<div onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
+		<div sec:authorize="hasAuthority('ADMIN')" onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
 			<div class="mx-n1">
 				<span class="btn d-inline-flex btn-sm btn-primary mx-1">
 					<span class="pe-2 d-flex align-items-center"><i class="bi bi-plus"></i></span>
 					<span>Create</span>
 				</span>
 			</div>
+
 		</div>
 	</div>
 
@@ -95,13 +97,17 @@
 				for (let i = 0; i < files.length; i++) {
 					formData.append('files', files[i]);
 				}
-
+				var token = $("meta[name='_csrf']").attr("content");
+				var header = $("meta[name='_csrf_header']").attr("content");
 				$.ajax({
 					url: '/rooms',
 					type: 'POST',
 					data: formData,
 					processData: false,
 					contentType: false,
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader(header, token);
+					},
 					success: (data) => {
 						console.log("function saveRoom():", data);
 						$.alert(data.message);

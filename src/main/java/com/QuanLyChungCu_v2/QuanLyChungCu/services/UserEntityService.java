@@ -47,26 +47,26 @@ public class UserEntityService {
         return userMap;
     }
 
-    public Object login(String username, String password) {
-        UserEntity user = userRepo.findByUsername(username);
-        if (user == null) {
-            return 1;
-        }
-
-        if (user.isLock()) {
-            return 2;
-        }
-
-        if (user.isFirstLogin()) {
-            return 3;
-        }
-
-        if (!user.getPassword().equals(password)) {
-            return 4;
-        }
-
-        return user;
-    }
+//    public Object login(String username, String password) {
+//        UserEntity user = userRepo.findByUsername(username);
+//        if (user == null) {
+//            return 1;
+//        }
+//
+//        if (user.isLock()) {
+//            return 2;
+//        }
+//
+//        if (user.isFirstLogin()) {
+//            return 3;
+//        }
+//
+//        if (!user.getPassword().equals(password)) {
+//            return 4;
+//        }
+//
+//        return user;
+//    }
 
     public void Update(UserEntity entity) {
         if (entity.getId() != null && userRepo.existsById(entity.getId())) {

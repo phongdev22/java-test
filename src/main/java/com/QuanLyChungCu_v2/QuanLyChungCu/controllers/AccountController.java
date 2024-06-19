@@ -14,11 +14,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -32,32 +32,36 @@ public class AccountController {
     private UserEntityService userEntityService;
 
     @Autowired
+<<<<<<< HEAD
     private RoomService roomService;
+=======
+    private PasswordEncoder passwordEncoder;
+>>>>>>> 440d1cb2813bfce4cdd3cb36cf5745d133a97522
 
     @GetMapping("")
     public String Index() {
         return "page-account";
     }
 
-    @PostMapping("/login")
-    public String login(@ModelAttribute("loginForm") AuthDTO authDTO,
-            RedirectAttributes redirectAttributes,
-            HttpSession session) {
-        String userName = authDTO.getUsername();
-        String password = authDTO.getPassword();
-
-        try {
-            Object user = userEntityService.login(userName, password);
-            session.setAttribute("user", user);
-            if (user instanceof UserEntity && ((UserEntity) user).isFirstLogin()) {
-                return "redirect:/users/profile";
-            } else {
-                return "redirect:/";
-            }
-        } catch (IllegalStateException e) {
-            return "redirect:/login";
-        }
-    }
+//    @PostMapping("/login")
+//    public String login(@ModelAttribute("loginForm") AuthDTO authDTO,
+//            RedirectAttributes redirectAttributes,
+//            HttpSession session) {
+//        String userName = authDTO.getUsername();
+//        String password = authDTO.getPassword();
+//
+//        try {
+//            Object user = userEntityService.login(userName, password);
+//            session.setAttribute("user", user);
+//            if (user instanceof UserEntity && ((UserEntity) user).isFirstLogin()) {
+//                return "redirect:/users/profile";
+//            } else {
+//                return "redirect:/";
+//            }
+//        } catch (IllegalStateException e) {
+//            return "redirect:/login";
+//        }
+//    }
 
     @GetMapping("/create")
     public String createUser(Model model) {
@@ -84,7 +88,7 @@ public class AccountController {
     public ResponseEntity<Map<String, String>> saveOrUpdateUser(@ModelAttribute UserEntity user) {
         Map<String, String> response = new HashMap<>();
         try {
-            user.setPassword("123456");
+            user.setPassword(passwordEncoder.encode("123456"));
             userEntityService.Save(user); // Gọi service để lưu UserEntity
             response.put("code", "1");
             response.put("message", "Save successfully!");

@@ -1,6 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{mainLayout}">
+      layout:decorate="~{mainLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Manage Survey</title>
@@ -11,7 +12,7 @@
         <a th:href="@{/survey}" class="h2 mb-0 ls-tight">Manage Survey</a>
     </div>
 
-    <div class="col-sm-6 col-12 text-sm-end">
+    <div sec:authorize="hasAuthority('ADMIN')" class="col-sm-6 col-12 text-sm-end">
         <div class="mx-n1">
             <span onclick="openForm('add')" class="btn d-inline-flex btn-sm btn-primary mx-1">
                 <span class="pe-2 d-flex align-items-center"><i class="bi bi-plus"></i></span>
@@ -89,12 +90,22 @@
 
             formData.questions = listQuestion;
             console.log("Form data:", formData)
-
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
             $.ajax({
                 url: "/survey",
                 type: "POST",
+<<<<<<< HEAD
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
+=======
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+>>>>>>> 440d1cb2813bfce4cdd3cb36cf5745d133a97522
                 success: (data)=> {
                     console.log("function saveChange() survey:", data)
                     $.alert(data.message)

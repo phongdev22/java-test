@@ -2,6 +2,7 @@
 		xmlns:th="http://www.thymeleaf.org"
 		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 		layout:decorate="~{mainLayout}"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
 >
 <head>
 	<meta charset="UTF-8" />
@@ -13,7 +14,7 @@
 		<a th:href="@{/surveys}" class="h2 mb-0 ls-tight">Manage Storage</a>
 	</div>
 
-	<div onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
+	<div sec:authorize="hasAuthority('ADMIN')" onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
 		<div class="mx-n1">
 				<span class="btn d-inline-flex btn-sm btn-primary mx-1">
 					<span class="pe-2 d-flex align-items-center"><i class="bi bi-plus"></i></span>
@@ -69,7 +70,8 @@
 				},
 			});
 		}
-
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
 		function saveItem() {
 			const formData = {
 				userId: $("#user-id").val(),
@@ -81,6 +83,11 @@
 				url: "/storage",
 				type: "POST",
 				data: formData,
+				processData: false,
+				contentType: false,
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader(header, token);
+				},
 				success: (data) => {
 					$.alert(data.message);
 					loadTable();
@@ -97,6 +104,11 @@
 						$.ajax({
 							url: "/storage/delete/" + id,
 							type: "DELETE",
+							processData: false,
+							contentType: false,
+							beforeSend: function (xhr) {
+								xhr.setRequestHeader(header, token);
+							},
 							success: (data) => {
 								console.log(data);
 								loadTable();

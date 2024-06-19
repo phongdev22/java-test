@@ -1,6 +1,8 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{mainLayout}">
+      layout:decorate="~{mainLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
 <head>
     <meta charset="UTF-8">
     <title>ADMIN | Manage account</title>
@@ -11,7 +13,7 @@
         <a th:href="@{/users}" class="h2 mb-0 ls-tight">Manage account</a>
     </div>
 
-    <div onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
+    <div sec:authorize="hasAuthority('ADMIN')" onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
         <div class="mx-n1">
         <span class="btn d-inline-flex btn-sm btn-primary mx-1">
             <span class="pe-2 d-flex align-items-center"><i class="bi bi-plus"></i></span>
@@ -77,6 +79,9 @@
             })
         }
 
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
         function saveChanges(){
             const formData = {
                 id: $("#user-id").val(),
@@ -91,6 +96,11 @@
                 url: "/users",
                 type: "POST",
                 data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
                 success: (data)=> {
                     $.alert(data.message)
                     loadTable();
@@ -102,6 +112,11 @@
             $.ajax({
                 url: "/users/update/status/" + id,
                 type: "POST",
+                processData: false,
+                contentType: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
                 success: function(data){
                     if(data.code === "0"){
                         $.alert(""+data.message)
@@ -120,6 +135,11 @@
                         $.ajax({
                             url: "/users/delete/"+id,
                             type: "DELETE",
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader(header, token);
+                            },
                             success: (data) => {
                                 console.log(data)
                                 loadTable();
