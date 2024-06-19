@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,9 @@ import java.util.Map;
 public class AccountController {
     @Autowired
     private UserEntityService userEntityService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("")
     public String Index() {
@@ -79,7 +83,7 @@ public class AccountController {
     public ResponseEntity<Map<String, String>> saveOrUpdateUser(@ModelAttribute UserEntity user) {
         Map<String, String> response = new HashMap<>();
         try {
-            user.setPassword("123456");
+            user.setPassword(passwordEncoder.encode("123456"));
             userEntityService.Save(user); // Gọi service để lưu UserEntity
             response.put("code", "1");
             response.put("message", "Save successfully!");

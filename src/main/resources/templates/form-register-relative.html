@@ -1,10 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-body">
+            <input type="hidden" id="relatives-id"/>
 
-</body>
-</html>
+            <div class="form-group row">
+                <div class="col-6">
+                    <label for="user-id"><strong>User</strong></label>
+                    <select class="form-control p-0 px-2" id="user-id">
+                        <option value="">Select a user</option>
+                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.firstname} + ${user.lastname}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div><strong>Information of Relatives</strong></div>
+
+            <div class="form-group">
+                <label for="relativeName">Name</label>
+                <input type="text" class="form-control" id="relativeName" name="relativeName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="relativePhone">Phone</label>
+                <input type="number" class="form-control" id="relativePhone" name="relativePhone">
+            </div>
+
+            <div class="form-group">
+                <label for="relationship">Relationship with User</label>
+                <input type="text" class="form-control" id="relationship" name="relationship">
+            </div>
+
+            <div class="form-group">
+                <label for="vehicleRegistrationNumber">License Plate</label>
+                <input type="text" class="form-control" id="vehicleRegistrationNumber" name="vehicleRegistrationNumber">
+            </div>
+
+            <div class="form-group row">
+                <div class="col-6">
+                    <label for="registrationDate">Registration Date</label>
+                    <input type="date" class="form-control" id="registrationDate" name="registrationDate" required>
+                </div>
+                <div class="col-6">
+                    <label for="expiryDate">Due Date</label>
+                    <input type="date" class="form-control" id="expiryDate" name="expiryDate" required>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-sm btn-primary" onclick="saveChangesRelative()">Save</button>
+        </div>
+    </div>
+</div>

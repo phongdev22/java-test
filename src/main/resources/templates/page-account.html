@@ -79,6 +79,9 @@
             })
         }
 
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
         function saveChanges(){
             const formData = {
                 id: $("#user-id").val(),
@@ -92,6 +95,11 @@
                 url: "/users",
                 type: "POST",
                 data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
                 success: (data)=> {
                     $.alert(data.message)
                     loadTable();
@@ -103,6 +111,11 @@
             $.ajax({
                 url: "/users/update/status/" + id,
                 type: "POST",
+                processData: false,
+                contentType: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
                 success: function(data){
                     if(data.code === "0"){
                         $.alert(""+data.message)
@@ -121,6 +134,11 @@
                         $.ajax({
                             url: "/users/delete/"+id,
                             type: "DELETE",
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader(header, token);
+                            },
                             success: (data) => {
                                 console.log(data)
                                 loadTable();

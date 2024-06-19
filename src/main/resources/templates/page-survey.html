@@ -88,11 +88,17 @@
 
             formData.questions = listQuestion;
             console.log("Form data:", formData)
-
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
             $.ajax({
                 url: "/survey",
                 type: "POST",
                 data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
                 success: (data)=> {
                     console.log("function saveChange() survey:", data)
                     $.alert(data.message)

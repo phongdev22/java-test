@@ -14,7 +14,7 @@
         <a th:href="@{/relative-registration}" class="h2 mb-0 ls-tight">Register for relatives</a>
     </div>
 
-    <div sec:authorize="hasAuthority('ADMIN')" onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
+    <div onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
         <div class="mx-n1">
         <span class="btn d-inline-flex btn-sm btn-primary mx-1">
             <span class="pe-2 d-flex align-items-center"><i class="bi bi-plus"></i></span>
@@ -25,14 +25,75 @@
 </div>
 
 <th:block layout:fragment="content">
-    <div>
+    <div id="content-wrapper" class="mt-2">
+        <div class="col-5 my-2 d-flex align-items-center">
+            <input id="search" type="text" class="col-9 form-control" placeholder="Search here...">
+            <button type="button"
+                    onclick="loadTable()"
+                    class="btn btn-sm mx-2 d-flex align-items-center justify-content-center"
+                    th:style="'width: 35px; height:35px; border-radius: 50%; box-shadow: -5px 1px 10px #bcbcbc, -7px -7px 15px #ffffff'">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+        <div id="list-relatives" ></div>
+        <div id="form-relatives" class="modal fade" tabindex="-1"></div>
     </div>
 </th:block>
 
 <th:block layout:fragment="scripts">
     <script th:inline="javascript">
-        function openForm(mode, id){
+        // $(document).ready(function (){
+        //     loadTable()
+        //     $('#search').on('keydown', function(event) {
+        //         if (event.keyCode === 13) {
+        //             event.preventDefault();
+        //             loadTable();
+        //         }
+        //     });
+        // })
 
+        function openForm(mode, id){
+            const url = mode === "add" ? "/relative-registration/create" : "/relative-registration/" + id;
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (data) {
+                    const formModal = $("#form-relatives");
+                    formModal.html(data);
+                    formModal.modal('show');
+                }
+            });
+        }
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        function saveChangesRelative(){
+            const formData = {
+                userId: $('#user-id').val(),
+                relativeName: $('#relativeName').val(),
+                relativePhone: $('#relativePhone').val(),
+                relationship: $('#relationship').val(),
+                vehicleRegistrationNumber: $('#vehicleRegistrationNumber').val(),
+                registrationDate: $('#registrationDate').val(),
+                expiryDate: $('#expiryDate').val(),
+            };
+
+            $.ajax({
+                url: '/relative-registration',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function(response) {
+                    // console.log(response)
+                    $.alert(""+response.message);
+                    // $('#form-relatives').modal('hide');
+                    // loadTable();
+                }
+            });
+            console.log(formData)
         }
     </script>
 </th:block>

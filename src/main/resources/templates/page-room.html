@@ -97,13 +97,17 @@
 				for (let i = 0; i < files.length; i++) {
 					formData.append('files', files[i]);
 				}
-
+				var token = $("meta[name='_csrf']").attr("content");
+				var header = $("meta[name='_csrf_header']").attr("content");
 				$.ajax({
 					url: '/rooms',
 					type: 'POST',
 					data: formData,
 					processData: false,
 					contentType: false,
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader(header, token);
+					},
 					success: (data) => {
 						console.log("function saveRoom():", data);
 						$.alert(data.message);

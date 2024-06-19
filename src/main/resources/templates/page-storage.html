@@ -70,7 +70,8 @@
 				},
 			});
 		}
-
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
 		function saveItem() {
 			const formData = {
 				userId: $("#user-id").val(),
@@ -82,6 +83,11 @@
 				url: "/storage",
 				type: "POST",
 				data: formData,
+				processData: false,
+				contentType: false,
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader(header, token);
+				},
 				success: (data) => {
 					$.alert(data.message);
 					loadTable();
@@ -98,6 +104,11 @@
 						$.ajax({
 							url: "/storage/delete/" + id,
 							type: "DELETE",
+							processData: false,
+							contentType: false,
+							beforeSend: function (xhr) {
+								xhr.setRequestHeader(header, token);
+							},
 							success: (data) => {
 								console.log(data);
 								loadTable();
