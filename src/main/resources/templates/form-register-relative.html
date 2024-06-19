@@ -1,10 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <!-- Modal Body -->
+        <div class="modal-body">
+            <input id="register-id" type="hidden" th:value="${relativeRegistration.id}">
+            <div class="form-group">
+                <label for="user-id">Residents ID</label>
+                <select class="form-control py-0" id="user-id">
+                    <option value="">Select a room</option>
+                    <option th:each="user : ${users}"
+                            th:value="${user.id}"
+                            th:text="${user.firstname + ' ' + user.lastname}"
+                            th:selected="${user.id == relativeRegistration.userId}"
+                    ></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="relativeName">Relative Name</label>
+                <input type="text" th:value="${relativeRegistration.relativeName}" class="form-control" id="relativeName" placeholder="Enter relative name">
+            </div>
+            <div class="form-group">
+                <label for="relativePhone">Relative Phone</label>
+                <input type="tel" th:value="${relativeRegistration.relativePhone}" class="form-control" id="relativePhone"  placeholder="Enter relative phone">
+            </div>
+            <div class="form-group">
+                <label for="relationship">Relationship</label>
+                <select class="form-control py-0 " id="relationship" >
+                    <option value="">Select relationship</option>
+                    <option th:value="'spouse'" th:selected="${relativeRegistration.relationship == 'spouse'}">Spouse</option>
+                    <option th:value="'parent'" th:selected="${relativeRegistration.relationship == 'parent'}">Parent</option>
+                    <option th:value="'child'" th:selected="${relativeRegistration.relationship == 'child'}">Child</option>
+                    <option th:value="'sibling'" th:selected="${relativeRegistration.relationship == 'sibling'}">Sibling</option>
+                    <option th:value="'other'" th:selected="${relativeRegistration.relationship == 'other'}">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="vehicleRegistrationNumber">Vehicle Registration Number</label>
+                <input type="text" th:value="${relativeRegistration.vehicleRegistrationNumber}" class="form-control" id="vehicleRegistrationNumber" aria-describedby="vehicleRegistrationNumberHelp" placeholder="Enter vehicle registration number">
 
-</body>
-</html>
+            </div>
+            <div class="form-group">
+                <label for="expiryDate">Expiry Date</label>
+                <input type="date" th:vale="${relativeRegistration.expiryDate}" class="form-control" id="expiryDate" aria-describedby="expiryDateHelp">
+            </div>
+        </div>
+            <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-sm btn-primary" onclick="saveChangesRelative()">Save</button>
+        </div>
+    </div>
+</div>

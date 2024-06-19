@@ -33,26 +33,22 @@ public class RelativeRegistrationController {
 
     @GetMapping("/list")
     public String listAll(Model model) {
-        model.addAttribute("registrations", service.findAll());
+        model.addAttribute("content", service.findAll());
         return "list-register-relative";
     }
 
     @GetMapping("/create")
     public String showRegistrationForm(Model model) {
-        model.addAttribute("users",userEntityService.findAll());
+        model.addAttribute("users", userEntityService.findAll());
         model.addAttribute("relativeRegistration", new RelativeRegistration());
         return "form-register-relative";
     }
 
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") Integer id, Model model) {
-        Optional<RelativeRegistration> registration = service.findById(id);
-        if (registration.isPresent()) {
-            model.addAttribute("relativeRegistration", registration.get());
-            return "form-register-relative";
-        } else {
-            return "redirect:/relative-registration";
-        }
+    @GetMapping("/{id}")
+    public String Details(@PathVariable("id")Integer id, Model model) {
+        model.addAttribute("users", userEntityService.findAll());
+        model.addAttribute("relativeRegistration", service.findById(id).get());
+        return "form-register-relative";
     }
 
     @DeleteMapping("/delete/{id}")
@@ -72,26 +68,13 @@ public class RelativeRegistrationController {
 
     @PostMapping("")
     public ResponseEntity<Map<String, Object>> createOrUpdate(@ModelAttribute RelativeRegistrationDTO relativeRegistrationDTO) {
-        System.out.println(relativeRegistrationDTO);
-
         Map<String, Object> response = new HashMap<>();
         try{
-            RelativeRegistration relativeRegistration = new RelativeRegistration();
-
-            relativeRegistration.setUserId(relativeRegistrationDTO.getUserId());
-            relativeRegistration.setRelativeName(relativeRegistrationDTO.getRelativeName());
-            relativeRegistration.setRelativePhone(relativeRegistrationDTO.getRelativePhone());
-            relativeRegistration.setRelationship(relativeRegistrationDTO.getRelationship());
-            relativeRegistration.setVehicleRegistrationNumber(relativeRegistrationDTO.getVehicleRegistrationNumber());
-            relativeRegistration.setRegistrationDate(relativeRegistrationDTO.getRegistrationDate());
-            relativeRegistration.setExpiryDate(relativeRegistrationDTO.getExpiryDate());
-            relativeRegistration.setCreatedAt(new Date());
-            relativeRegistration.setUpdatedAt(new Date());
-            service.save(relativeRegistration);
-
+            service.save(relativeRegistrationDTO);
             response.put("code", 0);
             response.put("message", "Relative registration saved successfully");
         }catch (Exception ex){
+            System.out.println(ex.getMessage());
             response.put("code", 1);
             response.put("message", "Relative registration saved failed");
         }

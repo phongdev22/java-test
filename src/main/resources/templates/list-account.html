@@ -6,6 +6,7 @@
             <th>Last Name</th>
             <th>Email</th>
             <th>Phone</th>
+            <th>RoomId</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -21,10 +22,15 @@
             <td class="align-middle" th:text="${user.lastname}" th:onclick="'javascript:openForm(\'edit\', ' + ${user.id} + ');'"></td>
             <td class="align-middle" th:text="${user.email}" th:onclick="'javascript:openForm(\'edit\', ' + ${user.id} + ');'"></td>
             <td class="align-middle" th:text="${user.phone}" th:onclick="'javascript:openForm(\'edit\', ' + ${user.id} + ');'"></td>
+            <td class="align-middle" th:text="${user.roomId}" th:onclick="'javascript:openForm(\'edit\', ' + ${user.id} + ');'"></td>
             <td>
                 <button type="submit" class="btn btn-sm btn-neutral"
                         th:onclick="'updateStatus(' + ${user.id} + ')'">
                     <i th:class="${user.isLock} ? 'bi bi-lock' : 'bi bi-unlock'"></i>
+                </button>
+                <button type="submit" class="btn btn-sm btn-neutral"
+                        th:onclick="'deleteAccount(' + ${user.id} + ')'">
+                    <i class="bi bi-trash"></i>
                 </button>
             </td>
         </tr>

@@ -35,10 +35,6 @@ public class SurveyController {
     public ResponseEntity<Object> SaveChanges(@RequestBody SurveyDTO surveyDTO){
         HashMap<String, Object> response = new HashMap<>();
         try{
-            System.out.println(surveyDTO.getTitle());
-            System.out.println(surveyDTO.getDescription());
-            System.out.println(surveyDTO.getEndDate());
-            System.out.println(surveyDTO.getStartDate());
 
             surveyService.Save(surveyDTO);
             response.put("code", 0);

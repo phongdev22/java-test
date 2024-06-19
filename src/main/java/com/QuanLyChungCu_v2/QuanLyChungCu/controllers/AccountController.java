@@ -14,6 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,36 +35,15 @@ public class AccountController {
     private UserEntityService userEntityService;
 
     @Autowired
-<<<<<<< HEAD
     private RoomService roomService;
-=======
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
->>>>>>> 440d1cb2813bfce4cdd3cb36cf5745d133a97522
 
     @GetMapping("")
     public String Index() {
         return "page-account";
     }
-
-//    @PostMapping("/login")
-//    public String login(@ModelAttribute("loginForm") AuthDTO authDTO,
-//            RedirectAttributes redirectAttributes,
-//            HttpSession session) {
-//        String userName = authDTO.getUsername();
-//        String password = authDTO.getPassword();
-//
-//        try {
-//            Object user = userEntityService.login(userName, password);
-//            session.setAttribute("user", user);
-//            if (user instanceof UserEntity && ((UserEntity) user).isFirstLogin()) {
-//                return "redirect:/users/profile";
-//            } else {
-//                return "redirect:/";
-//            }
-//        } catch (IllegalStateException e) {
-//            return "redirect:/login";
-//        }
-//    }
 
     @GetMapping("/create")
     public String createUser(Model model) {
@@ -80,7 +62,12 @@ public class AccountController {
 
     // @GetMapping("/profile/{userId}") @PathVariable("userId")Integer userId
     @GetMapping("/profile")
-    public String getProfile() {
+    public String getProfile(Model model) {
+        UserEntity user = getUserAuthencated();
+        if(user == null){
+            return "redirect:login";
+        }
+        model.addAttribute("user", user);
         return "page-profile";
     }
 
@@ -89,6 +76,8 @@ public class AccountController {
         Map<String, String> response = new HashMap<>();
         try {
             user.setPassword(passwordEncoder.encode("123456"));
+            user.setUsername(user.getPhone());
+            user.setRoleName("USER");
             userEntityService.Save(user); // Gọi service để lưu UserEntity
             response.put("code", "1");
             response.put("message", "Save successfully!");
@@ -101,13 +90,15 @@ public class AccountController {
         }
     }
 
-    @PutMapping("/{userId}/change-password")
-    public ResponseEntity<ResponseData> changePassword(@PathVariable("userId") int userId,
-            @RequestBody String newPassword) {
+    @PostMapping("/change-password")
+    public ResponseEntity<ResponseData> changePassword(@RequestParam String password) {
         try {
-            UserEntity entity = new UserEntity();
-            entity.setId(userId);
-            userEntityService.UpdateProfile(entity);
+            UserEntity user = getUserAuthencated();
+            if(user != null){
+                System.out.println(password);
+                user.setPassword(passwordEncoder.encode(password));
+                userEntityService.Save(user);
+            }
             return ResponseEntity.ok(new ResponseData(0, "Update successfully", null));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.ok(new ResponseData(1, "Update fail!", null));
@@ -169,5 +160,28 @@ public class AccountController {
 
         model.addAttribute("users", users);
         return "list-account";
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<Object> DeleteAccount(@PathVariable("userId")Integer id){
+        HashMap<String, Object> res = new HashMap<>();
+        try{
+            userEntityService.Delete(id);
+            res.put("code", 0);
+            res.put("message", "Delete survey success!");
+        }catch (Exception ex){
+            res.put("code", 1);
+            res.put("message", "Delete survey fail!");
+        }
+        return  new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    private UserEntity getUserAuthencated(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String username = ((UserDetails) principal).getUsername();
+            return userEntityService.findByUserName(username);
+        }
+        return null;
     }
 }

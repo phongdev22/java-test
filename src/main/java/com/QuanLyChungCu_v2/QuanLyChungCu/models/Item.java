@@ -14,7 +14,7 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer userId;
-    private boolean status;
+    private Boolean status;
     private Date createdAt;
     private Date updatedAt;
     private String image;

@@ -42,15 +42,18 @@
 
 <th:block layout:fragment="scripts">
     <script th:inline="javascript">
-        // $(document).ready(function (){
-        //     loadTable()
-        //     $('#search').on('keydown', function(event) {
-        //         if (event.keyCode === 13) {
-        //             event.preventDefault();
-        //             loadTable();
-        //         }
-        //     });
-        // })
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+
+        $(document).ready(function (){
+            loadTable()
+            $('#search').on('keydown', function(event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    loadTable();
+                }
+            });
+        })
 
         function openForm(mode, id){
             const url = mode === "add" ? "/relative-registration/create" : "/relative-registration/" + id;
@@ -64,36 +67,68 @@
                 }
             });
         }
-        var token = $("meta[name='_csrf']").attr("content");
-        var header = $("meta[name='_csrf_header']").attr("content");
+
+        function loadTable(page){
+            const keyword = $("#search").val();
+            $.ajax({
+                url: "/relative-registration/list",
+                type: "GET",
+                data: { currentPage: page, keyword: keyword },
+                success: (data) => {
+                    $("#list-relatives").html(data);
+                }
+            });
+        }
+
         function saveChangesRelative(){
             const formData = {
+                id: $('#register-id').val(),
                 userId: $('#user-id').val(),
                 relativeName: $('#relativeName').val(),
                 relativePhone: $('#relativePhone').val(),
                 relationship: $('#relationship').val(),
                 vehicleRegistrationNumber: $('#vehicleRegistrationNumber').val(),
-                registrationDate: $('#registrationDate').val(),
                 expiryDate: $('#expiryDate').val(),
             };
+
+            console.log(formData)
 
             $.ajax({
                 url: '/relative-registration',
                 type: 'POST',
                 data: formData,
-                processData: false,
-                contentType: false,
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader(header, token);
                 },
                 success: function(response) {
-                    // console.log(response)
                     $.alert(""+response.message);
-                    // $('#form-relatives').modal('hide');
-                    // loadTable();
+                    loadTable();
                 }
             });
             console.log(formData)
+        }
+
+        function deleteRelative(id){
+            $.confirm({
+                title: "Notification!",
+                content: "Do you want to delete it!",
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: "/relative-registration/delete/"+id,
+                            type: "DELETE",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader(header, token);
+                            },
+                            success: function(response) {
+                                $.alert(""+response.message);
+                                loadTable();
+                            }
+                        });
+                    },
+                    cancel: function () {},
+                },
+            });
         }
     </script>
 </th:block>

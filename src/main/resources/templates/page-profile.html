@@ -22,24 +22,31 @@
                         <div class="row mb-3">
                             <label for="firstName" class="col-sm-2 col-form-label">First Name</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="firstName" placeholder="John">
+                                <input type="text" th:value="${user.firstname}" class="form-control" id="firstName" placeholder="John">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <label for="lastName" class="col-sm-2 col-form-label">Last Name</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="lastName" placeholder="Doe">
+                                <input type="text" th:value="${user.lastname}" class="form-control" id="lastName" placeholder="Doe">
                             </div>
                         </div>
+
+                        <!--<div class="row mb-3">
+                            <label for="Email" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input disabled type="text" th:value="${user.email}" class="form-control" id="Email" placeholder="Doe">
+                            </div>
+                        </div>-->
 
                         <div class="row form-group mb-2 d-flex align-items-center">
                             <span class="col-sm-2 col-form-label">Change passsword</span>
                             <div class="row col-sm-10 d-flex justify-content-between" th:style="${'padding-right:0'}">
                                 <div class="col-6 pr-0">
-                                    <input type="text" class="form-control" id="old-pass" placeholder="old password">
+                                    <input type="password" class="form-control" id="old-pass" placeholder="new password">
                                 </div>
                                 <div class="col-6 pr-0">
-                                    <input type="text" class="form-control" id="new-pass" placeholder="new password">
+                                    <input type="password" class="form-control" id="new-pass" placeholder="re-write password">
                                 </div>
                             </div>
                         </div>
@@ -65,6 +72,13 @@
 
 <th:block layout:fragment="scripts">
     <script th:inline="javascript">
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+
+        $(document).ready(function() {
+            $("#change-password").on('click', updatePassword)
+        })
+
         function renderAvatar(that){
             const avatarPreview = $('#avatarPreview');
             const file = that.files[0];
@@ -79,21 +93,24 @@
         }
 
         function updatePassword(){
-            const oldPassword = $('#old-pass').val();
-            const newPassword = $('#new-pass').val();
+            const oldPassword = $('#old-pass').val().trim();
+            const newPassword = $('#new-pass').val().trim();
 
-            const requestData = {
-                oldPassword: oldPassword,
-                newPassword: newPassword
-            };
+            if(oldPassword !== newPassword){
+                $.alert("Password do not match")
+                return
+            }
 
             $.ajax({
-                type: 'POST',
                 url: '/users/change-password',
-                contentType: 'application/json',
-                data: JSON.stringify(requestData),
+                type: 'POST',
+                data: {password: newPassword},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
                 success: function(response) {
-                    console.log('Password changed successfully');
+                    console.log(response)
+                   $.alert(""+response.message)
                 },
                 error: function(xhr, status, error) {
                     console.error('Error changing password:', error);

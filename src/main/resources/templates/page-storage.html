@@ -33,6 +33,9 @@
 
 <th:block layout:fragment="scripts">
 	<script th:inline="javascript">
+		const token = $("meta[name='_csrf']").attr("content");
+		const header = $("meta[name='_csrf_header']").attr("content");
+
 		$(document).ready(function () {
 			loadTable();
 			$('#search').on('keydown', function(event) {
@@ -70,21 +73,18 @@
 				},
 			});
 		}
-		var token = $("meta[name='_csrf']").attr("content");
-		var header = $("meta[name='_csrf_header']").attr("content");
+
 		function saveItem() {
 			const formData = {
+				id: $("#item-id").val(),
 				userId: $("#user-id").val(),
-				// image: $("#name").val(),
-				status: $("#status").val(),
+				status: $("#status").val() === "1",
 			};
-
+			console.log(formData)
 			$.ajax({
 				url: "/storage",
 				type: "POST",
 				data: formData,
-				processData: false,
-				contentType: false,
 				beforeSend: function (xhr) {
 					xhr.setRequestHeader(header, token);
 				},

@@ -1,10 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Relative Name</th>
+            <th>Phone Number</th>
+            <th class="text-center">Relationship</th>
+            <th class="text-center">Vehicle Registration Number</th>
+            <th>Registration Date</th>
+            <th>Expiry Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="registration : ${content}">
+            <td class="align-middle" th:text="${registration.userId}" th:onclick="'javascript:openForm(\'edit\', ' + ${registration.id} + ');'"></td>
+            <td class="align-middle" th:text="${registration.relativeName}" th:onclick="'javascript:openForm(\'edit\', ' + ${registration.id} + ');'"></td>
+            <td class="align-middle" th:text="${registration.relativePhone}" th:onclick="'javascript:openForm(\'edit\', ' + ${registration.id} + ');'"></td>
+            <td class="align-middle text-center" th:text="${registration.relationship}" th:onclick="'javascript:openForm(\'edit\', ' + ${registration.id} + ');'"></td>
+            <td class="align-middle text-center" th:text="${registration.vehicleRegistrationNumber}" th:onclick="'javascript:openForm(\'edit\', ' + ${registration.id} + ');'"></td>
+            <td class="align-middle" th:text="${registration.registrationDate}" th:onclick="'javascript:openForm(\'edit\', ' + ${registration.id} + ');'"></td>
+            <td class="align-middle" th:text="${registration.expiryDate}" th:onclick="'javascript:openForm(\'edit\', ' + ${registration.id} + ');'"></td>
+            <td>
+                <button class="btn btn-danger btn-sm" th:onclick="|deleteRelative('${registration.id}')|" >
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot th:if="${totalPages > 1}">
+    <tr>
+        <td colspan="5"></td>
+        <td colspan="4">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination" style="justify-content: flex-end;">
+                    <li th:classappend="${currentPage > 1} ? 'page-item' : 'page-item disabled'">
+                        <button class="page-link" th:onclick="|loadTable(${currentPage - 1})|">Previous</button>
+                    </li>
 
-</body>
-</html>
+                    <li th:each="i:${#numbers.sequence(1, totalPages)}"
+                        th:classappend="${currentPage == i} ? 'page-item active' : 'page-item'">
+
+                        <button class="page-link"
+                                th:style="${currentPage == i} ? 'border-color: #cfd6df; background-color: #007bff;' : ''"
+                                th:onclick="|loadTable(${i})|"
+                                th:text="${i}">1</button>
+                    </li>
+
+                    <li th:classappend="${currentPage < totalPages} ? 'page-item' : 'page-item disabled'">
+                        <button class="page-link" th:onclick="|loadTable(${currentPage + 1})|">Next</button>
+                    </li>
+                </ul>
+            </nav>
+        </td>
+    </tr>
+    </tfoot>
+</table>

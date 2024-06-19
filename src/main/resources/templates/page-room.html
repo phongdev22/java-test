@@ -43,6 +43,10 @@
 
 	<th:block layout:fragment="scripts">
 		<script th:inline="javascript">
+
+			const token = $("meta[name='_csrf']").attr("content");
+			const header = $("meta[name='_csrf_header']").attr("content");
+
 			$(document).ready(function () {
 				loadTable();
 				$('#search').on('keydown', function(event) {
@@ -97,8 +101,7 @@
 				for (let i = 0; i < files.length; i++) {
 					formData.append('files', files[i]);
 				}
-				var token = $("meta[name='_csrf']").attr("content");
-				var header = $("meta[name='_csrf_header']").attr("content");
+
 				$.ajax({
 					url: '/rooms',
 					type: 'POST',
@@ -125,6 +128,9 @@
 							$.ajax({
 								url: "/rooms/delete/" + id,
 								type: "DELETE",
+								beforeSend: function (xhr) {
+									xhr.setRequestHeader(header, token);
+								},
 								success: (data) => {
 									console.log(data);
 									loadTable();

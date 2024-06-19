@@ -24,6 +24,8 @@ public class UserDetailsImpl implements UserDetails {
         return authorities;
     }
 
+    public Integer getUserId(){return user.getId();}
+
     @Override
     public String getPassword() {
         return user.getPassword();
@@ -52,5 +54,9 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public boolean isFirstLogin() {
+        return user.isFirstLogin();
     }
 }

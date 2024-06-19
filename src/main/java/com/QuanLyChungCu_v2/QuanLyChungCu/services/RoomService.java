@@ -37,8 +37,6 @@ public class RoomService{
         }
     }
 
-    public void addOrUpdate(Room entity){}
-
     public Room Save(Room entity){
         return repo.saveAndFlush(entity);
     }

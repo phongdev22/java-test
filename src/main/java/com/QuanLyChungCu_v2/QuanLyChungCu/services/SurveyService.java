@@ -30,7 +30,6 @@ public class SurveyService {
     public Survey Save(SurveyDTO surveyDTO){
         Survey survey;
         if (surveyDTO.getId() != null) {
-            // Nếu có id, thực hiện cập nhật survey đã tồn tại
             survey = surveyRepo.findById(surveyDTO.getId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid survey Id: " + surveyDTO.getId()));
 
@@ -39,7 +38,7 @@ public class SurveyService {
             survey.setStartDate(surveyDTO.getStartDate());
             survey.setEndDate(surveyDTO.getEndDate());
         } else {
-            // Nếu không có id, tạo mới survey
+
             survey = new Survey();
             survey.setTitle(surveyDTO.getTitle());
             survey.setDescription(surveyDTO.getDescription());
@@ -47,6 +46,7 @@ public class SurveyService {
             survey.setEndDate(surveyDTO.getEndDate());
             survey.setCreatedDate(new Date());
             survey.setStatus(false);
+            survey = surveyRepo.saveAndFlush(survey);
         }
 
         for (SurveyQuestionDTO questionDTO : surveyDTO.getQuestions()) {

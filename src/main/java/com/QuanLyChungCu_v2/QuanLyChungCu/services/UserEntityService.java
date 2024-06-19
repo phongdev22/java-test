@@ -33,8 +33,12 @@ public class UserEntityService {
     }
 
     public List<UserEntity> findAll(){
-        return userRepo.findAll();
+        return userRepo.findAllExcludingAdmins();
     };
+
+    public UserEntity findByUserName(String username){
+        return userRepo.findByUsername(username).get();
+    }
 
     public void Save(UserEntity entity){
         userRepo.save(entity);
@@ -46,27 +50,6 @@ public class UserEntityService {
         HashMap<String, Object> userMap = new HashMap<>();
         return userMap;
     }
-
-//    public Object login(String username, String password) {
-//        UserEntity user = userRepo.findByUsername(username);
-//        if (user == null) {
-//            return 1;
-//        }
-//
-//        if (user.isLock()) {
-//            return 2;
-//        }
-//
-//        if (user.isFirstLogin()) {
-//            return 3;
-//        }
-//
-//        if (!user.getPassword().equals(password)) {
-//            return 4;
-//        }
-//
-//        return user;
-//    }
 
     public void Update(UserEntity entity) {
         if (entity.getId() != null && userRepo.existsById(entity.getId())) {
@@ -124,5 +107,9 @@ public class UserEntityService {
         } else {
             throw new IllegalArgumentException("Media of user id " + userId + " not found.");
         }
+    }
+
+    public void Delete(Integer id){
+        userRepo.deleteById(id);
     }
 }

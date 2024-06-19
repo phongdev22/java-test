@@ -28,8 +28,11 @@ public class StorageService {
         }
     }
 
-    public List<Item> GetItemsByUserId(Integer userId){
+    public List<Item> findByIdUserId(Integer userId){
         return repo.getItemsByUserId(userId);
+    }
+    public Item GetItemById(Integer id){
+        return repo.findById(id).get();
     }
 
     public void SaveItemInStorage(Item item){
@@ -40,7 +43,7 @@ public class StorageService {
         Item itemToUpdate = repo.findById(itemId).orElse(null);
 
         if (itemToUpdate != null) {
-            itemToUpdate.setStatus(!itemToUpdate.isStatus());
+            itemToUpdate.setStatus(!itemToUpdate.getStatus());
             repo.save(itemToUpdate);
         } else {
             throw new RuntimeException("Không tìm thấy Item với ID: " + itemId);

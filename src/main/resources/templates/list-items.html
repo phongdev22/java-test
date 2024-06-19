@@ -2,6 +2,7 @@
     <thead>
     <tr>
         <th>#</th>
+        <th>Item Id</th>
         <th>User Id</th>
         <th>Status</th>
         <!--        <th>Image</th>-->
@@ -10,6 +11,7 @@
     <tbody>
     <tr th:each="item, index : ${items}">
         <td class="align-middle" th:text="${index.index + 1}"></td>
+        <td class="align-middle" th:text="${item.id ?: 'Không có dữ liệu'}" th:onclick="'javascript:openForm(\'edit\', ' + ${item.id} + ');'"></td>
         <td class="align-middle" th:text="${item.userId ?: 'Không có dữ liệu'}" th:onclick="'javascript:openForm(\'edit\', ' + ${item.id} + ');'"></td>
         <td class="align-middle" th:text="${(item.status ?: 'Không có dữ liệu') == false ? 'Not received' : 'Received'}" th:onclick="'javascript:openForm(\'edit\', ' + ${item.id} + ');'"></td>
         <td class="align-middle text-center" >

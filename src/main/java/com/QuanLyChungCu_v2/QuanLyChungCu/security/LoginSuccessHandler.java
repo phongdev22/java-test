@@ -18,13 +18,11 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-//        if( userDetails.isFirstLogin() ){
-//            System.out.println("The user " + userDetails.getAuthorities() + " has logged in.");
-//            response.sendRedirect("/change-password-first-time");
-//        } else {
-//
-//        }
-        System.out.println( "Hello"+userDetails);
+        if( userDetails.isFirstLogin() ){
+            System.out.println("The user " + userDetails.getAuthorities() + " has logged in.");
+            response.sendRedirect("/users/profile");
+        }
+
         response.sendRedirect("/");
     }
 }

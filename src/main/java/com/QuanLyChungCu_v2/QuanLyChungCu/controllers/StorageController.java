@@ -2,6 +2,7 @@ package com.QuanLyChungCu_v2.QuanLyChungCu.controllers;
 
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Item;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.StorageService;
+import com.QuanLyChungCu_v2.QuanLyChungCu.services.UserEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,10 +22,14 @@ public class StorageController {
     @Autowired
     private StorageService storageService;
 
-    @GetMapping("/{userId}")
-    public String GetAllItems(@PathVariable Integer userId) {
-        storageService.GetItemsByUserId(userId);
+    @Autowired
+    private UserEntityService userEntityService;
 
+    @GetMapping("/{userId}")
+    public String GetAllItems(@PathVariable Integer userId, Model model) {
+        model.addAttribute("users", userEntityService.findAll());
+        System.out.println(userId);
+        model.addAttribute("item", storageService.GetItemById(userId));
         return "form-storage";
     }
 
@@ -38,6 +43,7 @@ public class StorageController {
     @GetMapping("/create")
     public String createRoom(Model model) {
         model.addAttribute("item", new Item());
+        model.addAttribute("users", userEntityService.findAll());
         return "form-storage";
     }
 

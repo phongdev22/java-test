@@ -1,18 +1,24 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-body">
-            <input id="item-id" type="hidden" >
+            <input id="item-id" type="hidden" th:value="${item.id}">
 
             <div class="form-group">
                 <label for="user-id">Code</label>
-                <input type="text" class="form-control" id="user-id" placeholder="Enter User ID">
+                <select class="form-control py-0" id="user-id">
+                    <option th:each="user : ${users}"
+                            th:text="${user.firstname + ' ' + user.lastname}"
+                            th:value="${user.id}"
+                            th:selected="${user.id == item.userId}"
+                    ></option>
+                </select>
             </div>
 
             <div class="form-group">
                 <label for="status">Status</label>
                 <select id="status" class="form-control py-0">
-                    <option value="0">Not yet</option>
-                    <option value="1">Received</option>
+                    <option value="0" th:selected="${item.status == false}">Not yet</option>
+                    <option value="1" th:selected="${item.status == true}">Received</option>
                 </select>
             </div>
 
