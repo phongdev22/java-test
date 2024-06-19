@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -35,25 +34,25 @@ public class AccountController {
         return "page-account";
     }
 
-    @PostMapping("/login")
-    public String login(@ModelAttribute("loginForm") AuthDTO authDTO,
-            RedirectAttributes redirectAttributes,
-            HttpSession session) {
-        String userName = authDTO.getUsername();
-        String password = authDTO.getPassword();
-
-        try {
-            Object user = userEntityService.login(userName, password);
-            session.setAttribute("user", user);
-            if (user instanceof UserEntity && ((UserEntity) user).isFirstLogin()) {
-                return "redirect:/users/profile";
-            } else {
-                return "redirect:/";
-            }
-        } catch (IllegalStateException e) {
-            return "redirect:/login";
-        }
-    }
+//    @PostMapping("/login")
+//    public String login(@ModelAttribute("loginForm") AuthDTO authDTO,
+//            RedirectAttributes redirectAttributes,
+//            HttpSession session) {
+//        String userName = authDTO.getUsername();
+//        String password = authDTO.getPassword();
+//
+//        try {
+//            Object user = userEntityService.login(userName, password);
+//            session.setAttribute("user", user);
+//            if (user instanceof UserEntity && ((UserEntity) user).isFirstLogin()) {
+//                return "redirect:/users/profile";
+//            } else {
+//                return "redirect:/";
+//            }
+//        } catch (IllegalStateException e) {
+//            return "redirect:/login";
+//        }
+//    }
 
     @GetMapping("/create")
     public String createUser(Model model) {

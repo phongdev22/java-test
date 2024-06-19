@@ -23,4 +23,11 @@ public class UserEntity {
     private boolean isLock;
     private boolean isFirstLogin;
     private Integer roomId;
+
+    public UserEntity(String username, String password, String roleName) {
+        this.username = username;
+        this.password = password;
+        this.roleName = roleName;
+
+    }
 }
