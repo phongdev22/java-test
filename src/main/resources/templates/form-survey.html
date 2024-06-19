@@ -30,8 +30,8 @@
                         <div th:each="question : ${questions}" class="question col-12 p-0 d-flex">
                             <input type="hidden" th:value=${question.id}>
                             <div class="col-9">
-                                <label th:for="|question-${question.id}|">Question [[${question.order}]]</label>
-                                <input th:id="|question-${question.id}|" type="text" class="q-text form-control px-2" required>
+                                <label th:for="|question-${question.id}|">Question [[${question.questionOrder}]]</label>
+                                <input th:id="|question-${question.id}|" th:value="${question.questionText}" type="text" class="q-text form-control px-2" required>
                             </div>
                             <div class="col-3">
                                 <label th:for="|type-question-${question.id}|">Question Type</label>

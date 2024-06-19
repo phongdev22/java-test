@@ -32,7 +32,7 @@ public class SurveyController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> SaveChanges(@ModelAttribute SurveyDTO surveyDTO){
+    public ResponseEntity<Object> SaveChanges(@RequestBody SurveyDTO surveyDTO){
         HashMap<String, Object> response = new HashMap<>();
         try{
             System.out.println(surveyDTO.getTitle());
@@ -45,7 +45,7 @@ public class SurveyController {
             response.put("message", "Create success!");
         }catch (Exception ex){
             response.put("code", 1);
-            response.put("message", "Create fail!");
+            response.put("message",  ex.getMessage());
         }
         return  new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -80,6 +80,7 @@ public class SurveyController {
     @GetMapping("/{surveyId}")
     public String Details(@PathVariable("surveyId")Integer surveyId, Model model){
         model.addAttribute("survey", surveyService.GetById(surveyId));
+        System.out.println(surveyService.GetSurveyQuestionBySurveyId(surveyId).stream().count());
         model.addAttribute("questions", surveyService.GetSurveyQuestionBySurveyId(surveyId));
         return "form-survey";
     }

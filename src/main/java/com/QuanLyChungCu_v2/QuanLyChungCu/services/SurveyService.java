@@ -28,21 +28,46 @@ public class SurveyService {
     private SurveyResponseRepository surveyResponseRepo;
 
     public Survey Save(SurveyDTO surveyDTO){
-        Survey survey = new Survey();
-        survey.setTitle(surveyDTO.getTitle());
-        survey.setDescription(surveyDTO.getDescription());
-        survey.setStartDate(surveyDTO.getStartDate());
-        survey.setEndDate(surveyDTO.getEndDate());
-        survey.setCreatedDate(new Date());
-        survey.setStatus(false);
-        survey = surveyRepo.saveAndFlush(survey);
+        Survey survey;
+        if (surveyDTO.getId() != null) {
+            // Nếu có id, thực hiện cập nhật survey đã tồn tại
+            survey = surveyRepo.findById(surveyDTO.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid survey Id: " + surveyDTO.getId()));
+
+            survey.setTitle(surveyDTO.getTitle());
+            survey.setDescription(surveyDTO.getDescription());
+            survey.setStartDate(surveyDTO.getStartDate());
+            survey.setEndDate(surveyDTO.getEndDate());
+        } else {
+            // Nếu không có id, tạo mới survey
+            survey = new Survey();
+            survey.setTitle(surveyDTO.getTitle());
+            survey.setDescription(surveyDTO.getDescription());
+            survey.setStartDate(surveyDTO.getStartDate());
+            survey.setEndDate(surveyDTO.getEndDate());
+            survey.setCreatedDate(new Date());
+            survey.setStatus(false);
+        }
 
         for (SurveyQuestionDTO questionDTO : surveyDTO.getQuestions()) {
-            SurveyQuestion question = new SurveyQuestion();
-            question.setQuestionText(questionDTO.getText());
-            question.setQuestionType(questionDTO.getQuestionType());
-            question.setSurveyId(survey.getId());
-            question.setOrder(questionDTO.getOrder());
+            SurveyQuestion question;
+
+            if (questionDTO.getId() != null) {
+                question = surveyQuestionRepo.findById(questionDTO.getId())
+                        .orElseThrow(() -> new IllegalArgumentException("Invalid question Id: " + questionDTO.getId()));
+
+                question.setQuestionText(questionDTO.getText());
+                question.setQuestionType(questionDTO.getQuestionType());
+                question.setQuestionOrder(questionDTO.getOrder());
+            } else {
+
+                question = new SurveyQuestion();
+                question.setQuestionText(questionDTO.getText());
+                question.setQuestionType(questionDTO.getQuestionType());
+                question.setQuestionOrder(questionDTO.getOrder());
+                question.setSurveyId(survey.getId());
+            }
+
             surveyQuestionRepo.save(question);
         }
 

@@ -68,12 +68,18 @@
                 roomId: $('#room-name').val(),
                 paymentCode: $('#paymentCode').val(),
                 serviceType: $('#service-type').val(),
-                status: $('#status').val(),
                 amount: $('#amount').val(),
                 description: $('#description').val(),
                 dueDate: $('#dueDate').val()
             };
 
+            console.log(formData)
+            if(Object.values(formData).every(x => x === "" || !x)){
+                $.alert("Please fill all information in form!")
+                return;
+            }
+
+            formData.status = $('#status').val();
             $.ajax({
                 type: 'POST',
                 url: '/invoices',

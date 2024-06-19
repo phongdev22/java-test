@@ -7,7 +7,7 @@
                 <div class="col-6">
                     <label for="room-name">Room</label>
                     <select class="form-control p-0 px-2" id="room-name">
-                        <option value="">Select a user</option>
+                        <option value="">Select a room</option>
                         <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.code}"></option>
                     </select>
 

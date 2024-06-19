@@ -5,6 +5,7 @@ import com.QuanLyChungCu_v2.QuanLyChungCu.dto.AuthDTO;
 import com.QuanLyChungCu_v2.QuanLyChungCu.dto.ResponseData;
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Room;
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.UserEntity;
+import com.QuanLyChungCu_v2.QuanLyChungCu.services.RoomService;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.UserEntityService;
 import com.QuanLyChungCu_v2.QuanLyChungCu.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ import java.util.Map;
 public class AccountController {
     @Autowired
     private UserEntityService userEntityService;
+
+    @Autowired
+    private RoomService roomService;
 
     @GetMapping("")
     public String Index() {
@@ -58,6 +62,7 @@ public class AccountController {
     @GetMapping("/create")
     public String createUser(Model model) {
         model.addAttribute("user", new UserEntity());
+        model.addAttribute("rooms", roomService.findAll());
         return "form-account";
     }
 
@@ -65,8 +70,7 @@ public class AccountController {
     public String updateRoomView(Model model, @PathVariable("userId") int userId) {
         System.out.println(userId);
         model.addAttribute("user", userEntityService.findById(userId));
-        // model.addAttribute("media", mediaService.findByMapping(roomId, "Room",
-        // "Image" ));
+        model.addAttribute("rooms", roomService.findAll());
         return "form-account";
     }
 

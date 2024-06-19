@@ -16,5 +16,5 @@ public class SurveyQuestion  {
     private String questionText;
     private String questionType;
     private Integer surveyId;
-    private Integer order;
+    private Integer questionOrder;
 }

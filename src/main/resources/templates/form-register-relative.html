@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-body">
+            <!-- User ID (hidden input) -->
+            <input id="user-id" th:value="${user.id}" type="hidden">
 
-</body>
-</html>
+            <!-- Relative Registration Form -->
+            <div class="row form-group">
+                <div class="col-6">
+                    <label for="relativeName">Relative Name</label>
+                    <input type="text" class="form-control" id="relativeName" placeholder="Enter relative name...">
+                </div>
+                <div class="col-6">
+                    <label for="relativePhone">Relative Phone</label>
+                    <input type="text" class="form-control" id="relativePhone" placeholder="Enter relative phone...">
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-6">
+                    <label for="relationship">Relationship</label>
+                    <input type="text" class="form-control" id="relationship" placeholder="Enter relationship...">
+                </div>
+                <div class="col-6">
+                    <label for="vehicleRegistrationNumber">Vehicle Registration Number</label>
+                    <input type="text" class="form-control" id="vehicleRegistrationNumber" placeholder="Enter vehicle registration number...">
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-6">
+                    <label for="registrationDate">Registration Date</label>
+                    <input type="date" class="form-control" id="registrationDate">
+                </div>
+                <div class="col-6">
+                    <label for="expiryDate">Expiry Date</label>
+                    <input type="date" class="form-control" id="expiryDate">
+                </div>
+            </div>
+
+            <!-- Hidden Fields -->
+            <input type="hidden" id="status" value="Active">
+            <input type="hidden" id="createdAt" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')}">
+            <input type="hidden" id="updatedAt" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')}">
+
+        </div>
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-sm btn-primary" onclick="saveRelativeRegistration()">Save</button>
+        </div>
+    </div>
+</div>

@@ -33,6 +33,35 @@
         function openForm(mode, id){
 
         }
+
+        function saveRelativeRegistration() {
+            const relativeRegistration = {
+                userId: $('#user-id').val(),
+                relativeName: $('#relativeName').val(),
+                relativePhone: $('#relativePhone').val(),
+                relationship: $('#relationship').val(),
+                vehicleRegistrationNumber: $('#vehicleRegistrationNumber').val(),
+                registrationDate: $('#registrationDate').val(),
+                expiryDate: $('#expiryDate').val(),
+                status: $('#status').val(),
+                createdAt: $('#createdAt').val(),
+                updatedAt: $('#updatedAt').val()
+            };
+
+            $.ajax({
+                url: '/saveRelativeRegistration', // Adjust the endpoint URL
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(relativeRegistration),
+                success: function(response) {
+                    console.log('Relative registration saved successfully');
+                    // Optionally close the modal or handle success response
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error saving relative registration:', error);
+                }
+            });
+        }
     </script>
 </th:block>
 

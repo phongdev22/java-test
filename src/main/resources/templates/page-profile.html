@@ -50,6 +50,12 @@
                                 <input type="file" onchange="renderAvatar(this)" id="avatarUpload" class="form-control">
                             </div>
                         </div>
+
+                        <div class="d-flex justify-content-center align-items-center">
+                            <button type="button" class="btn btn-sm btn-primary mx-2" id="change-password">Change Password</button>
+                            <button type="button" class="btn btn-sm btn-primary mx-2" id="change-avatar">Change Avatar</button>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -71,6 +77,34 @@
                 reader.readAsDataURL(file);
             }
         }
+
+        function updatePassword(){
+            const oldPassword = $('#old-pass').val();
+            const newPassword = $('#new-pass').val();
+
+            const requestData = {
+                oldPassword: oldPassword,
+                newPassword: newPassword
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/users/change-password',
+                contentType: 'application/json',
+                data: JSON.stringify(requestData),
+                success: function(response) {
+                    console.log('Password changed successfully');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error changing password:', error);
+                }
+            });
+        }
+
+        function updateAvatar(){
+
+        }
+
     </script>
 </th:block>
 

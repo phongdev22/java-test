@@ -26,6 +26,20 @@
                 </div>
             </div>
 
+            <div class="row form-group">
+                <div class="col-12">
+                    <label for="phone">Room</label>
+                    <select class="form-control p-0 px-2" id="room-name">
+                        <option value="">Select a room</option>
+                        <option th:each="room : ${rooms}"
+                                th:value="${room.id}"
+                                th:text="${room.code}"
+                                th:selected="${room.id == user.roomId}"
+                        ></option>
+                    </select>
+                </div>
+            </div>
+
         </div>
         <!-- Modal Footer -->
         <div class="modal-footer">

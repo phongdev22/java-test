@@ -66,8 +66,9 @@
         }
 
         function saveChanges(){
+            const surveyId = $("#survey-id").val()
             const formData = {
-                id: $("#survey-id").val(),
+                id: surveyId === '' ? null : surveyId,
                 title: $("#title").val(),
                 description: $("#description").val(),
                 startDate:  $("#startDate").val(),
@@ -77,8 +78,9 @@
             const listQuestion = []
 
             $(".question").each(function(index) {
+                const questionId = $(this).find("input[type=hidden]").val()
                 listQuestion.push({
-                    id: $(this).find("input[type=hidden]").val(),
+                    id: questionId === '' ? null : questionId,
                     order: index,
                     text: $(this).find(".q-text").val(),
                     questionType: $(this).find(".q-type").val()
@@ -91,7 +93,8 @@
             $.ajax({
                 url: "/survey",
                 type: "POST",
-                data: formData,
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
                 success: (data)=> {
                     console.log("function saveChange() survey:", data)
                     $.alert(data.message)
