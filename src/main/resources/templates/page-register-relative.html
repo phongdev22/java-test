@@ -2,6 +2,7 @@
         xmlns:th="http://www.thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{mainLayout}"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
 >
 <head>
     <meta charset="UTF-8" />
@@ -13,7 +14,7 @@
         <a th:href="@{/relative-registration}" class="h2 mb-0 ls-tight">Register for relatives</a>
     </div>
 
-    <div onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
+    <div sec:authorize="hasAuthority('ADMIN')" onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
         <div class="mx-n1">
         <span class="btn d-inline-flex btn-sm btn-primary mx-1">
             <span class="pe-2 d-flex align-items-center"><i class="bi bi-plus"></i></span>

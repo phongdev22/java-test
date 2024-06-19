@@ -27,5 +27,11 @@ public class QuanLyChungCuApplication implements CommandLineRunner {
 					new UserEntity("admin", passwordEncoder.encode("admin"), "ADMIN");
             userRepository.save(admin);
         }
+
+		if(userRepository.findByUsername("user").isEmpty()){
+			UserEntity admin =
+					new UserEntity("user", passwordEncoder.encode("user"), "USER");
+			userRepository.save(admin);
+		}
 	}
 }

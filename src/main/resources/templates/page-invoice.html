@@ -1,6 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{mainLayout}">
+      layout:decorate="~{mainLayout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Manage Invoice</title>
@@ -11,7 +12,7 @@
         <a th:href="@{/invoices}" class="h2 mb-0 ls-tight">Manage Invoice</a>
     </div>
 
-    <div onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
+    <div sec:authorize="hasAuthority('ADMIN')" onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
         <div class="mx-n1">
         <span class="btn d-inline-flex btn-sm btn-primary mx-1">
             <span class="pe-2 d-flex align-items-center"><i class="bi bi-plus"></i></span>

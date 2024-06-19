@@ -23,19 +23,19 @@ public class RelativeRegistrationController {
 
     @GetMapping()
     public String Index(){
-        return "page-register-relatives";
+        return "page-register-relative";
     }
 
     @GetMapping("/list")
     public String listAll(Model model) {
         model.addAttribute("registrations", service.findAll());
-        return "list-relative-registration";
+        return "list-register-relative";
     }
 
     @GetMapping("/new")
     public String showRegistrationForm(Model model) {
         model.addAttribute("relativeRegistration", new RelativeRegistration());
-        return "form-relative-register";
+        return "form-register-relative";
     }
 
     @PostMapping
@@ -57,7 +57,7 @@ public class RelativeRegistrationController {
         Optional<RelativeRegistration> registration = service.findById(id);
         if (registration.isPresent()) {
             model.addAttribute("relativeRegistration", registration.get());
-            return "form-relative-register";
+            return "form-register-relative";
         } else {
             return "redirect:/relative-registration";
         }
