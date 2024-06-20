@@ -41,6 +41,9 @@ public class UserEntityService {
     }
 
     public void Save(UserEntity entity){
+        if(entity.getId() == null || !userRepo.existsById(entity.getId())){
+            entity.setFirstLogin(true);
+        }
         userRepo.save(entity);
     }
 
@@ -52,7 +55,7 @@ public class UserEntityService {
     }
 
     public void Update(UserEntity entity) {
-        if (entity.getId() != null && userRepo.existsById(entity.getId())) {
+        if (entity.getId() != null && !userRepo.existsById(entity.getId())) {
             userRepo.save(entity);
         } else {
             throw new IllegalArgumentException("UserEntity with id " + entity.getId() + " not found.");

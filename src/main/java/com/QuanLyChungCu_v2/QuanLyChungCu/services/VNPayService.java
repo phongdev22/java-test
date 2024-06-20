@@ -60,19 +60,27 @@ class VNPayConfig {
         return digest;
     }
 
-    public static String hashAllFields(Map fields) {
+    public static String hashAllFields(Map fields){
         ArrayList fieldNames = new ArrayList(fields.keySet());
         Collections.sort(fieldNames);
         StringBuilder sb = new StringBuilder();
         Iterator itr = fieldNames.iterator();
+
         while (itr.hasNext()) {
             String fieldName = (String) itr.next();
             String fieldValue = (String) fields.get(fieldName);
+            
             if ((fieldValue != null) && (fieldValue.length() > 0)) {
                 sb.append(fieldName);
                 sb.append("=");
-                sb.append(fieldValue);
+                try{
+                    sb.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                }catch(UnsupportedEncodingException e){
+                    e.printStackTrace();
+                }
+//                sb.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
             }
+
             if (itr.hasNext()) {
                 sb.append("&");
             }
@@ -121,10 +129,6 @@ public class VNPayService {
     @Autowired
     private InvoiceRepository invoiceRepo;
 
-    public void CreateInvoice(){
-
-    }
-
     public void UpdatePaymentStatus(String orderId, String message){
         Invoice invoice = invoiceRepo.findByPaymentCode(orderId);
         if(invoice != null){
@@ -133,10 +137,9 @@ public class VNPayService {
         }
     }
 
-    public String CreateUrlPayment(int total, String orderInfor, String urlReturn){
+    public String CreateUrlPayment(int total, String orderInfor, String paymentCode ,String urlReturn){
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
-        String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
         String vnp_IpAddr = "127.0.0.1";
         String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
         String orderType = "order-type";
@@ -148,7 +151,7 @@ public class VNPayService {
         vnp_Params.put("vnp_Amount", String.valueOf(total*100));
         vnp_Params.put("vnp_CurrCode", "VND");
 
-        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
+        vnp_Params.put("vnp_TxnRef", paymentCode);
         vnp_Params.put("vnp_OrderInfo", orderInfor);
         vnp_Params.put("vnp_OrderType", orderType);
 
@@ -173,19 +176,20 @@ public class VNPayService {
         StringBuilder hashData = new StringBuilder();
         StringBuilder query = new StringBuilder();
         Iterator itr = fieldNames.iterator();
+
         while (itr.hasNext()) {
             String fieldName = (String) itr.next();
             String fieldValue = (String) vnp_Params.get(fieldName);
             if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                //Build hash data
+
                 hashData.append(fieldName);
                 hashData.append('=');
                 try {
                     hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                    //Build query
                     query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
                     query.append('=');
                     query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -195,6 +199,7 @@ public class VNPayService {
                 }
             }
         }
+
         String queryUrl = query.toString();
         String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
@@ -202,7 +207,9 @@ public class VNPayService {
     }
 
     public Boolean VerifySignature(Map<String, String> params){
+
         Map<String, String> paramsCopy = new TreeMap<>(params);
+
         String vnp_SecureHash = paramsCopy.get("vnp_SecureHash");
 
         if (paramsCopy.containsKey("vnp_SecureHashType"))
@@ -215,7 +222,11 @@ public class VNPayService {
             paramsCopy.remove("vnp_SecureHash");
         }
 
+        System.out.println(paramsCopy);
         String signValue = VNPayConfig.hashAllFields(paramsCopy);
+
+        System.out.println("Sign value" + signValue);
+        System.out.println("Sign value" + vnp_SecureHash);
         return vnp_SecureHash != null && vnp_SecureHash.equals(signValue);
     }
 }

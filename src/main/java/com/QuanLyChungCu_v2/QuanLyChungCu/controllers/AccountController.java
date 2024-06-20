@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.QuanLyChungCu_v2.QuanLyChungCu.utils.Utils.saveFile;
+
 @Controller
 @RequestMapping("/users")
 public class AccountController {
@@ -95,7 +97,6 @@ public class AccountController {
         try {
             UserEntity user = getUserAuthencated();
             if(user != null){
-                System.out.println(password);
                 user.setPassword(passwordEncoder.encode(password));
                 userEntityService.Save(user);
             }
@@ -121,21 +122,23 @@ public class AccountController {
         }
     }
 
-    @PostMapping("/{userId}/upload-avatar")
-    public ResponseEntity<String> handleFileUpload(@PathVariable("userId") int userId,
-            @RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("Please select a file to upload");
-        }
+    @PostMapping("/upload-avatar")
+    public ResponseEntity<?> handleFileUpload(@RequestParam("avatar") MultipartFile file) {
         try {
-            String fileName = "avatar_" + userId;
+            UserEntity user = getUserAuthencated();
+            System.out.println(user);
+            if(user != null){
+                String fileName = user.getUsername() + "_" + file.getOriginalFilename();
+                String folder = "avatars";
+                saveFile(file, folder, fileName);
+                String avatarUrl = "/images/" + folder + "/" + fileName;
+                user.setAvatar(avatarUrl);
+                userEntityService.Save(user);
+            }
 
-            userEntityService.UpdateAvatar(userId, fileName);
-            Utils.saveFile(file, "avatar", fileName);
-
-            return ResponseEntity.ok("Avatar uploaded successfully");
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload avatar");
+            return ResponseEntity.ok(new ResponseData(0, "Update successfully", null));
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ResponseData(1, "Update fail!", null));
         }
     }
 

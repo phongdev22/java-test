@@ -40,6 +40,9 @@
 
 <th:block layout:fragment="scripts">
     <script th:inline="javascript">
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+
         $(document).ready(function (){
             loadTable();
 
@@ -63,8 +66,7 @@
                 }
             });
         }
-        var token = $("meta[name='_csrf']").attr("content");
-        var header = $("meta[name='_csrf_header']").attr("content");
+
         function saveChanges(){
             const formData = {
                 roomId: $('#room-name').val(),
@@ -86,8 +88,6 @@
                 type: 'POST',
                 url: '/invoices',
                 data: formData,
-                processData: false,
-                contentType: false,
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader(header, token);
                 },

@@ -26,10 +26,10 @@ public class PaymentController {
 
     @GetMapping("/vnpay")
     public String Callback(@RequestParam Map<String, String> params){
-        System.out.println("Da goi callback");
         if (vnPayService.VerifySignature(params)) {
             String orderId = params.get("vnp_TxnRef");
             String responseCode = params.get("vnp_ResponseCode");
+            System.out.println("Da goi callback");
 
             String message = "00".equals(responseCode) ? "Success" : "Fail";
             vnPayService.UpdatePaymentStatus(orderId, message);
@@ -39,7 +39,6 @@ public class PaymentController {
 
     @GetMapping("/status/{id}")
     public ResponseEntity<Object> GetStatusInvoice(@PathVariable("id")Integer id){
-
         return new ResponseEntity<>(new Object(), HttpStatus.OK);
     }
 
@@ -50,7 +49,7 @@ public class PaymentController {
             Invoice invoice = invoiceService.GetById(id);
             int amount = invoice.getAmount().intValue();
             String orderInfo = "Pay for invoice code " + invoice.getId();
-            String paymentUrl = vnPayService.CreateUrlPayment(amount, orderInfo, "http://localhost:8080");
+            String paymentUrl = vnPayService.CreateUrlPayment(amount, orderInfo, invoice.paymentCode, "http://localhost:8080");
 
             res.put("code", 0);
             res.put("message", "Success!");

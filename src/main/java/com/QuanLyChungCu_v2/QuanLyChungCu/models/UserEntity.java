@@ -23,6 +23,7 @@ public class UserEntity {
     private boolean isLock;
     private boolean isFirstLogin;
     private Integer roomId;
+    private String avatar;
 
     public UserEntity(String username, String password, String roleName) {
         this.username = username;

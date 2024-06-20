@@ -73,7 +73,7 @@ public class InvoiceController {
     @PostMapping
     public ResponseEntity<Map<String, Object>> CreateNew(@ModelAttribute InvoiceDTO invoiceDTO){
         Invoice invoice = new Invoice();
-
+        System.out.println(invoiceDTO);
         invoice.setRoomId(invoiceDTO.getRoomId());
         invoice.setPaymentCode(invoiceDTO.getPaymentCode());
         invoice.setServiceType(invoiceDTO.getServiceType());
