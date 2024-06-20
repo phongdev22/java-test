@@ -53,6 +53,9 @@
                 url: "/feedback/list",
                 type: "GET",
                 data: {currentPage: page},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
                 success: (data) => {
                     $("#list-feedback").html(data)
                 },

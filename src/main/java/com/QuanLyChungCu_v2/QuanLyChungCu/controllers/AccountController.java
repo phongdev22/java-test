@@ -155,7 +155,7 @@ public class AccountController {
         } else {
             users = userEntityService.findAll();
             String finalKeyword = keyword.toLowerCase();
-            users.removeIf(user -> !user.getEmail().toLowerCase().contains(finalKeyword) &&
+            users.removeIf(user -> user.getEmail() != null && !user.getEmail().toLowerCase().contains(finalKeyword) &&
                     !user.getFirstname().toLowerCase().contains(finalKeyword) &&
                     !user.getLastname().toLowerCase().contains(finalKeyword) &&
                     !user.getPhone().toLowerCase().contains(finalKeyword));

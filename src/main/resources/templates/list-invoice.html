@@ -1,3 +1,6 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"
         integrity="sha512-r6rDA7W6ZeQhvl8S7yRVQUKVHdexq+GAlNkNNqVC7YyIV+NwqCTJe2hDWCiffTyRNOeGEzRRJ9ifvRm/HCzGYg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -35,7 +38,7 @@
       </button>
 
       <button class="btn btn-sm btn-square" th:if="${invoice != null && invoice.isPaid}" style="visibility: hidden"></button>
-      <button class="btn btn-sm btn-square btn-danger" th:attr="onclick='deleteInvoice(\'' + ${invoice.id} + '\')'">
+      <button sec:authorize="hasAuthority('ADMIN')" class="btn btn-sm btn-square btn-danger" th:attr="onclick='deleteInvoice(\'' + ${invoice.id} + '\')'">
         <i class="fa-regular fa-trash-can" style="color: white"></i>
       </button>
     </td>

@@ -16,4 +16,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
     Page<Invoice> findAllByKeyword(@RequestParam("keyword") String keyword, Pageable pageable);
 
     Invoice findByPaymentCode(String paymentCode);
+
+    Page<Invoice> findByRoomId(Integer id, Pageable pageable);
 }

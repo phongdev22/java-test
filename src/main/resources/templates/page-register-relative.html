@@ -14,7 +14,7 @@
         <a th:href="@{/relative-registration}" class="h2 mb-0 ls-tight">Register for relatives</a>
     </div>
 
-    <div onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
+    <div sec:authorize="hasAuthority('ADMIN')" onclick="openForm('add')" class="col-sm-6 col-12 text-sm-end">
         <div class="mx-n1">
         <span class="btn d-inline-flex btn-sm btn-primary mx-1">
             <span class="pe-2 d-flex align-items-center"><i class="bi bi-plus"></i></span>
@@ -73,6 +73,9 @@
             $.ajax({
                 url: "/relative-registration/list",
                 type: "GET",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
                 data: { currentPage: page, keyword: keyword },
                 success: (data) => {
                     $("#list-relatives").html(data);

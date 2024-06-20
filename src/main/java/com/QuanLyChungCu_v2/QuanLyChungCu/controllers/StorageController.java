@@ -1,6 +1,7 @@
 package com.QuanLyChungCu_v2.QuanLyChungCu.controllers;
 
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Item;
+import com.QuanLyChungCu_v2.QuanLyChungCu.models.UserEntity;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.StorageService;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.UserEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -96,5 +99,14 @@ public class StorageController {
             response.put("message", "Occurred error ");
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
+    }
+
+    private UserEntity getUserAuthencated () {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String username = ((UserDetails) principal).getUsername();
+            return userEntityService.findByUserName(username);
+        }
+        return null;
     }
 }

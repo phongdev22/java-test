@@ -25,7 +25,6 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         if( userDetails.isFirstLogin() ){
-//            System.out.println("The user " + userDetails.getAuthorities() + " has logged in.");
             UserEntity user = userEntityService.findById(userDetails.getUserId());
             user.setFirstLogin(false);
             userEntityService.Save(user);

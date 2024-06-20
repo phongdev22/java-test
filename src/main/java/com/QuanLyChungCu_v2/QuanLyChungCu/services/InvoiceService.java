@@ -21,8 +21,8 @@ public class InvoiceService {
         invoiceRepo.save(invoice);
     }
 
-    public List<Invoice> GetAllInvoiceByUserId(){
-        return new ArrayList<Invoice>();
+    public Page<Invoice> GetAllInvoiceByUserId(Integer id, Pageable pageable){
+        return invoiceRepo.findByRoomId(id, pageable);
     }
 
     public Page<Invoice> GetAll(Pageable pageable){

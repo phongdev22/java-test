@@ -73,6 +73,9 @@
                 url: "/users/list",
                 type: "GET",
                 data: {currentPage: page, keyword: keyword},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
                 success: (data) => {
                     $("#list-users").html(data)
                 },

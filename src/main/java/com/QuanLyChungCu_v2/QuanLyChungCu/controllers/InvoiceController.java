@@ -4,6 +4,7 @@ import com.QuanLyChungCu_v2.QuanLyChungCu.dto.InvoiceDTO;
 import com.QuanLyChungCu_v2.QuanLyChungCu.dto.ResponseData;
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Invoice;
 import com.QuanLyChungCu_v2.QuanLyChungCu.models.Room;
+import com.QuanLyChungCu_v2.QuanLyChungCu.models.UserEntity;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.InvoiceService;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.RoomService;
 import com.QuanLyChungCu_v2.QuanLyChungCu.services.UserEntityService;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +56,11 @@ public class InvoiceController {
         } else {
             keyword = keyword.toLowerCase();
             invoices = invoiceService.GetAllByKeyword(pageable, keyword).getContent();
+        }
+
+        UserEntity user = getUserAuthencated();
+        if(user !=null && user.getRoleName().equals("USER")){
+            invoices = invoiceService.GetAllInvoiceByUserId(user.getRoomId(), pageable).getContent();
         }
 
         model.addAttribute("invoices", invoices);
@@ -140,5 +148,14 @@ public class InvoiceController {
         dto.setDueDate(invoice.getDueDate());
 
         return dto;
+    }
+
+    private UserEntity getUserAuthencated () {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String username = ((UserDetails) principal).getUsername();
+            return userEntityService.findByUserName(username);
+        }
+        return null;
     }
 }
