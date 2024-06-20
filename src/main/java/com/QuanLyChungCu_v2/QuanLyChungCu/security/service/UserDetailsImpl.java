@@ -59,4 +59,8 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isFirstLogin() {
         return user.isFirstLogin();
     }
+
+    public void setFirstLogin(Boolean firstLogin){
+        user.setFirstLogin(firstLogin);
+    }
 }

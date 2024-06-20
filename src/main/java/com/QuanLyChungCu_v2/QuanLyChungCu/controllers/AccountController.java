@@ -62,7 +62,6 @@ public class AccountController {
         return "form-account";
     }
 
-    // @GetMapping("/profile/{userId}") @PathVariable("userId")Integer userId
     @GetMapping("/profile")
     public String getProfile(Model model) {
         UserEntity user = getUserAuthencated();
@@ -80,6 +79,7 @@ public class AccountController {
             user.setPassword(passwordEncoder.encode("123456"));
             user.setUsername(user.getPhone());
             user.setRoleName("USER");
+            user.setFirstLogin(true);
             userEntityService.Save(user); // Gọi service để lưu UserEntity
             response.put("code", "1");
             response.put("message", "Save successfully!");
@@ -127,7 +127,7 @@ public class AccountController {
         try {
             UserEntity user = getUserAuthencated();
             System.out.println(user);
-            if(user != null){
+            if (user != null) {
                 String fileName = user.getUsername() + "_" + file.getOriginalFilename();
                 String folder = "avatars";
                 saveFile(file, folder, fileName);
@@ -142,14 +142,14 @@ public class AccountController {
         }
     }
 
+
     @GetMapping("/list")
-    public String getAll(@RequestParam(defaultValue = "1") int currentPage,
+    public String getAll ( @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(defaultValue = "") String keyword,
-            Model model) {
+            Model model){
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         List<UserEntity> users;
-
         if (keyword == null || keyword.isEmpty()) {
             users = userEntityService.getAll(pageable).getContent();
         } else {
@@ -160,26 +160,25 @@ public class AccountController {
                     !user.getLastname().toLowerCase().contains(finalKeyword) &&
                     !user.getPhone().toLowerCase().contains(finalKeyword));
         }
-
         model.addAttribute("users", users);
         return "list-account";
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<Object> DeleteAccount(@PathVariable("userId")Integer id){
+    public ResponseEntity<Object> DeleteAccount (@PathVariable("userId") Integer id){
         HashMap<String, Object> res = new HashMap<>();
-        try{
+        try {
             userEntityService.Delete(id);
             res.put("code", 0);
             res.put("message", "Delete survey success!");
-        }catch (Exception ex){
+        } catch (Exception ex) {
             res.put("code", 1);
             res.put("message", "Delete survey fail!");
         }
-        return  new ResponseEntity<>(res, HttpStatus.OK);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    private UserEntity getUserAuthencated(){
+    private UserEntity getUserAuthencated () {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             String username = ((UserDetails) principal).getUsername();

@@ -33,7 +33,7 @@
                         </div>
 
                         <div class="row form-group mb-2 d-flex align-items-center">
-                            <span class="col-sm-2 col-form-label">Change passsword</span>
+                            <span class="col-sm-2 col-form-label">Change password</span>
                             <div class="row col-sm-10 d-flex justify-content-between" th:style="${'padding-right:0'}">
                                 <div class="col-6 pr-0">
                                     <input type="password" class="form-control" id="old-pass" placeholder="new password">
@@ -70,6 +70,7 @@
 
         $(document).ready(function() {
             $("#change-password").on('click', updatePassword)
+            $("#change-avatar").on('click', updateAvatar)
         })
 
         function renderAvatar(that){
@@ -95,7 +96,7 @@
             }
 
             $.ajax({
-                url: '/users/change-password',
+                url: '/users/upload-avatar',
                 type: 'POST',
                 data: {password: newPassword},
                 beforeSend: function (xhr) {
@@ -114,10 +115,12 @@
         function updateAvatar(){
             const formData = new FormData();
             const avatarFile = $('#avatarUpload')[0].files[0];
+
             if (!avatarFile) {
                 $.alert("Please select a file to upload");
                 return;
             }
+
             formData.append('avatar', avatarFile);
 
             $.ajax({
@@ -134,7 +137,7 @@
                     $.alert("" + response.message);
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error uploading avatar:', error);
+                        console.error('Error uploading avatar:', error);
                 }
             });
         }

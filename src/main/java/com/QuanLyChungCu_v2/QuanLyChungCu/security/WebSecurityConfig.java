@@ -52,6 +52,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((auth) ->
                         auth
+//                                .requestMatchers("/static/images/**").permitAll()
 //                                .requestMatchers("/rooms/**").hasAuthority("ROLE_ADMIN")
 //                                .requestMatchers("/api/test/admin").hasAuthority("ROLE_ADMIN")
 //                                .requestMatchers("/api/test/user").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
@@ -66,10 +67,6 @@ public class WebSecurityConfig {
                                 .passwordParameter("password")
                                 .permitAll()
                                 .successHandler(loginSuccessHandler)
-//                                .successHandler((request, response, authentication) -> {
-//                                    // Manually handle the redirection to the root page
-//                                    response.sendRedirect("/");
-//                                })
                 )
 
                 .logout((logout) ->
